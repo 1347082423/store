@@ -1,0 +1,27 @@
+.content-body{
+    background-color: #E7EAED;
+    height: 100%;
+    width: 100%;
+}
+
+.head{
+    background-color: white;
+    height: 40px;
+    width: 100%;
+}
+.title span{
+    font-size: 20px;
+    line-height: 40px;
+    color: blueviolet;
+}
+.title img{
+    width: 50px;
+    height: 30px;
+}
+.content-inner{
+    width: 90%;
+    height: 1000px;
+    background-color: white;
+    margin-top: 20px;
+    margin-left: 100px;
+}
