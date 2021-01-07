@@ -1,0 +1,138 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list"
+     style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label for="" class="layui-form-label">上级目录</label>
+        <div class="layui-input-block">
+            <input type="text" id="tree" lay-filter="tree" class="layui-input" >
+            <input type="hidden" name="pid" id="pid">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">菜单名称</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="text" name="title"  lay-verify="required"
+                           placeholder="请输入菜单名" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">菜单title</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name"
+                       placeholder="请输入title" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="url"
+                   placeholder="请输入地址" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">所属类别</label>
+            <div class="layui-input-inline">
+                <select name="category" >
+                    <option value="1" selected>系统资源</option>
+                    <option value="2" >非系统资源</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">打开方式</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <select name="type">
+                        <option value="1" selected>内部打开</option>
+                        <option value="2" >ifream打开</option>
+                    </select>
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">是否禁用</label>
+            <div class="layui-input-inline">
+                <input type="checkbox"  lay-filter="status" name="isForbid" lay-skin="switch"
+                       lay-text="未禁用|禁用">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" name="sort" placeholder="请输入内容" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label for="" class="layui-form-label">选择图标</label>
+        <div class="layui-input-block">
+            <input type="text" id="iconPicker" lay-filter="iconPicker" class="layui-input">
+            <input type="hidden" name="icon" id="icon">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <script type="text/html" template>
+        <input type="hidden" name="id" value="{{ d.params.id || '' }}">
+    </script>
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-inline">
+            <input type="button" lay-submit lay-filter="layuiadmin-app-form-submit" value="确认" class="layui-btn">
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['iconPicker','treeSelect', 'form'], function () {
+        var treeSelect = layui.treeSelect ,iconPicker = layui.iconPicker;
+        var $ = layui.$;
+        treeSelect.render({
+            // 选择器
+            elem: '#tree',
+            // 数据
+            data: '/menu/getAllMenu',
+            // 异步加载方式：get/post，默认get
+            type: 'get',
+            // 占位符
+            placeholder: '上级菜单',
+            // 是否开启搜索功能：true/false，默认false
+            search: true,
+            // 点击回调
+            click: function (d) {
+                $("#pid").val(d.current.id)
+            },
+            // 加载完成后的回调函数
+            success: function (d) {
+            }
+        });
+        iconPicker.render({
+            // 选择器，推荐使用input
+            elem: '#iconPicker',
+            // 数据类型：fontClass/unicode，推荐使用fontClass
+            type: 'fontClass',
+            // 是否开启搜索：true/false
+            search: true,
+            // 是否开启分页
+            page: true,
+            // 每页显示数量，默认12
+            limit: 24,
+            // 点击回调
+            click: function (data) {
+                console.log(data.icon);
+                $("#icon").val(data.icon)
+            }
+        });
+    });
+</script>

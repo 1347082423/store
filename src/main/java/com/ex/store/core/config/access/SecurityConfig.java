@@ -1,7 +1,7 @@
 package com.ex.store.core.config.access;
 
 
-import com.ex.store.sys.service.UserServerImpl;
+import com.ex.store.sys.service.impl.UserServerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().mvcMatchers("/js/**");
         web.ignoring().mvcMatchers("/lib/**");
         web.ignoring().mvcMatchers("/image/**");
+        web.ignoring().mvcMatchers("/json/**");
 
     }
 
@@ -50,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().logoutUrl("/delete")
                 .and()
                 .authorizeRequests() //开启登录校验
-                .antMatchers("/hello","/failure","/favicon.ico","/index","/index2").permitAll()//hello路径不需要校验
+                .antMatchers("/hello","/failure","/favicon.ico","/index","/index2","/index3").permitAll()//hello路径不需要校验
                 .anyRequest().access("@securityAuthorityAccess.hasPermit(request,authentication)");
     }
 

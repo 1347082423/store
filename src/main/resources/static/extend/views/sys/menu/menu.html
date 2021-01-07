@@ -1,0 +1,152 @@
+<title>文章列表</title>
+
+<div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">系统设置</a>
+        <a>
+            <cite>菜单管理</cite>
+        </a>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-list" style="margin-left: 300px;">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">菜单名字</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="title" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">模块</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="model" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">是否禁用</label>
+                    <div class="layui-input-inline">
+                        <select name="isForbid">
+                            <option value="0">请选择</option>
+                            <option value="1">否</option>
+                            <option value="2">是</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">类别</label>
+                    <div class="layui-input-inline">
+                        <select name="category">
+                            <option value="">请选择</option>
+                            <option value="1">系统资源</option>
+                            <option value="2">非系统资源</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">打开方式</label>
+                    <div class="layui-input-inline">
+                        <select name="type">
+                            <option value="0">请选择</option>
+                            <option value="1">内部打开</option>
+                            <option value="2">ifream</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-list" lay-submit lay-filter="LAY-app-contlist-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn layuiadmin-btn-list" data-type="batchdel">删除</button>
+                <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
+            </div>
+            <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
+            <script type="text/html" id="table-content-list">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑
+                </a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除
+                </a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use('menu', layui.factory('menu')).use(['form', 'admin', 'menu', 'table','jqutil'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , view = layui.view
+            , table = layui.table
+            , form = layui.form
+            ,jqutil = layui.jqutil;
+        form.render(null, 'app-content-list');
+        $('.layuiadmin-btn-list').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        var active = {
+            batchdel: function () {
+                var checkStatus = table.checkStatus('LAY-app-content-list')
+                    , checkData = checkStatus.data; //得到选中的数据
+
+                if (checkData.length === 0) {
+                    return layer.msg('请选择数据');
+                }
+
+                layer.confirm('确定删除吗？', function (index) {
+
+                    //执行 Ajax 后重载
+                    /*
+                    admin.req({
+                      url: 'xxx'
+                      //,……
+                    });
+                    */
+                    table.reload('LAY-app-content-list');
+                    layer.msg('已删除');
+                });
+            }
+            //添加
+            , add: function (othis) {
+                admin.popup({
+                    title: '添加菜单'
+                    , area: ['735px', '650px']
+                    , id: 'LAY-popup-content-add'
+                    , success: function (layero, index) {
+                        view(this.id).render('sys/menu/addmenu').done(function () {
+                            //必须加  否则有些表单加载不出来
+                            form.render(null, 'layuiadmin-app-form-list');
+                            //监听提交
+                            form.on('submit(layuiadmin-app-form-submit)', function (data) {
+                                var field = data.field; //获取提交的字段
+                                //提交 Ajax 成功后，关闭当前弹层并重载表格
+                                jqutil.render({
+                                    url:"menu/saveMenu",
+                                    params:field,
+                                    type:"POST",
+                                    success:function (d) {
+                                        console.log(d)
+                                    }
+                                });
+                                layui.table.reload('LAY-app-content-list'); //重载表格
+                                layer.close(index); //执行关闭
+                            });
+                        });
+                    }
+                });
+            }
+        };
+    });
+</script>

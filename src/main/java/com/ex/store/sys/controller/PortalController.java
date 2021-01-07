@@ -1,12 +1,18 @@
 package com.ex.store.sys.controller;
 
+import com.ex.store.core.dto.MenuDto;
 import com.ex.store.core.pojo.ExSysUser;
+import com.ex.store.core.vo.AjaxResponse;
+import com.ex.store.sys.service.SysService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * @Describe
@@ -21,14 +27,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class PortalController {
 
+    @Autowired
+    private SysService sysService;
+
 
     @GetMapping("/hello")
     public String login() {
         return "login";
     }
+
     @GetMapping("/index")
     public String index() {
-        return "index";
+        return "index2";
     }
 
     @GetMapping("/index2")
@@ -91,4 +101,12 @@ public class PortalController {
 //        return "登录成功" + username;
         return "aaaa";
     }
+
+    @RequestMapping("/obtainmenu")
+    @ResponseBody
+    public AjaxResponse obtainMenu() {
+        List<MenuDto> list = sysService.obtainMenu();
+        return AjaxResponse.success(list);
+    }
+
 }
