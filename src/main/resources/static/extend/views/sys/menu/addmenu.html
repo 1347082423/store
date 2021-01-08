@@ -86,7 +86,7 @@
         <div class="layui-input-block">
             <input type="text" id="iconPicker" lay-filter="iconPicker" class="layui-input">
             <script type="text/html" template>
-                <input type="hidden" name="icon" id="icon" value="{{ d.params.desc || '' }}">
+                <input type="hidden" name="icon" id="icon" value="{{ d.params.icon || '' }}">
             </script>
         </div>
     </div>
@@ -132,9 +132,8 @@
             // 加载完成后的回调函数
             success: function (d) {
                 var pid = $("#pid").val();
-                console.log(pid)
                 if (pid != null && pid.length > 0 && pid != '0') {
-                    treeSelect.checkNode("pTree", 10)
+                    treeSelect.checkNode("pTree", pid);
                 }
             }
         });
@@ -157,7 +156,7 @@
                 var icon = $("#icon").val();
                 console.log(icon)
                 if (icon != null && icon.length > 0) {
-                    iconPicker.checkNode("icon", icon)
+                    iconPicker.checkIcon("icon", icon)
                 }
             }
         });

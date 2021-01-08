@@ -3872,7 +3872,7 @@ layui.define(['form', 'jquery'], function (exports) { //提示：模块也可以
         TREE_SELECT_BODY_ID = 'layui-treeSelect-body-' + tmp,
         TREE_SELECT_BODY_CLASS = 'layui-treeSelect-body',
         TREE_SELECT_SEARCHED_CLASS = 'layui-treeSelect-search-ed';
-
+    this.TREE_INPUT_ID = TREE_INPUT_ID;
 
     var a = {
       init: function(){
@@ -4075,7 +4075,7 @@ layui.define(['form', 'jquery'], function (exports) { //提示：模块也可以
         treeObj = obj.treeObj(filter),
         node = treeObj.getNodeByParam("id", id, null),
         name = node.name;
-    treeInput.val(name);
+    $("#"+this.TREE_INPUT_ID).val(name);
     o.find('a[treenode_a]').removeClass('curSelectedNode');
     treeObj.selectNode(node);
   };
@@ -4093,13 +4093,12 @@ layui.define(['form', 'jquery'], function (exports) { //提示：模块也可以
       if (!filter) {
         layui.hint().error('filter 不能为空');
       }
-      var tf = $('*[lay-filter='+ filter +']'),
+      var tf = $('*[lay-filter=\"'+ filter +'\"]'),
           o = tf.next();
       return o;
     },
     treeObj: function (filter) {
-      var o = obj.filter(filter),
-          treeId = o.find('.layui-treeSelect-body').attr('id'),
+      var treeId = $(".layui-treeSelect-body").attr("id"),
           tree = $.fn.zTree.getZTreeObj(treeId);
       return tree;
     }

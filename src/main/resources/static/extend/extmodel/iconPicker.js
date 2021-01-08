@@ -29,6 +29,7 @@ layui.define(['laypage', 'form'], function (exports) {
             search = opts.search == null ? true : opts.search,
             // 点击回调
             click = opts.click,
+            success = opts.success,
             // json数据
             data = {},
             // 唯一标识
@@ -43,6 +44,7 @@ layui.define(['laypage', 'form'], function (exports) {
             LIST_BOX = 'layui-iconpicker-list-box',
             selected = 'layui-form-selected',
             unselect = 'layui-unselect';
+        this.ICON_BODY = ICON_BODY;
 
         var a = {
             init: function () {
@@ -50,6 +52,13 @@ layui.define(['laypage', 'form'], function (exports) {
 
                 a.hideElem().createSelect().createBody().toggleSelect();
                 common.loadCss();
+                if (success){
+                    var obj = {
+                        iconId: PICKER_BODY,
+                        data: data
+                    };
+                    success(obj);
+                }
                 return a;
             },
             /**
@@ -125,8 +134,8 @@ layui.define(['laypage', 'form'], function (exports) {
              * @returns {string}
              */
             createList: function (text) {
-                var d = data,
-                    l = d.length,
+                var iconData = data,
+                    l = iconData.length,
                     pageHtml = '',
                     listHtml = $('<div class="layui-iconpicker-list">')//'<div class="layui-iconpicker-list">';
 
@@ -139,7 +148,7 @@ layui.define(['laypage', 'form'], function (exports) {
                 var icons = [];
 
                 for (var i = 0; i < l; i++) {
-                    var obj = d[i];
+                    var obj = iconData[i];
 
                     // 判断是否模糊查询
                     if (text && obj.indexOf(text) === -1) {
@@ -312,7 +321,7 @@ layui.define(['laypage', 'form'], function (exports) {
      * @param iconName 图标名称，自动识别fontClass/unicode
      */
     IconPicker.prototype.checkIcon = function (filter, iconName){
-        var p = $('*[lay-filter='+ filter +']').next().find('.layui-iconpicker-item .layui-icon'),
+        var p = $('#'+this.ICON_BODY).find('.layui-iconpicker-item .layui-icon'),
             c = iconName;
 
         if (c.indexOf('#xe') > 0){
