@@ -7,11 +7,10 @@ import com.ex.store.core.vo.PageParameter;
 import com.ex.store.sys.service.SysService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,8 +43,15 @@ public class MenuController {
     @ResponseBody
     @PostMapping("saveMenu")
     public AjaxResponse saveMenu(ExSysMenu exSysMenu){
-        System.out.println(exSysMenu.getTitle());
-        return AjaxResponse.success();
+        String msg = sysService.saveMenu(exSysMenu);
+        return AjaxResponse.success(msg);
     }
 
+
+    @ResponseBody
+    @PostMapping("isForbid")
+    public AjaxResponse isForbid(@RequestBody ArrayList<ExSysMenu> exSysMenus){
+        String msg = sysService.isForbid(exSysMenus);
+        return AjaxResponse.success(msg);
+    }
 }

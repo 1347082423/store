@@ -57,6 +57,31 @@ public class SysServiceImpl implements SysService {
         });
         //list转换为树形结构
         List<TreeDto> dtos = TreeUtils.coverTreeWithChildren(treeDtos);
-        return AjaxResponse.success(dtos);
+        TreeDto treeDto = new TreeDto(0,0,"根目录",true,false);
+        treeDto.setChildren(dtos);
+        return AjaxResponse.success(treeDto);
+    }
+
+    @Override
+    public String saveMenu(ExSysMenu exSysMenu) {
+        int count = menuMapper.saveMenu(exSysMenu);
+        String msg = "保存失败";
+        if (count > 0){
+            msg = "保存成功";
+        }
+        return msg;
+    }
+
+    @Override
+    public String isForbid(List<ExSysMenu> exSysMenus) {
+        exSysMenus.stream().forEach(exSysMenu -> {
+            exSysMenu.setIsForbid(2);
+        });
+        int count = menuMapper.updateByList(exSysMenus);
+        String msg = "保存失败";
+        if (count > 0){
+            msg = "保存成功";
+        }
+        return msg;
     }
 }

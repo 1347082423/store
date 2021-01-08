@@ -20,4 +20,8 @@ public interface MenuMapper {
     List<ExSysMenu> findListByPage(PageParameter<ExSysMenu> pageParameter);
 
     int findCount(PageParameter<ExSysMenu> pageParameter);
+
+    int saveMenu(ExSysMenu exSysMenu);
+
+    int updateByList(List<ExSysMenu> exSysMenus);
 }

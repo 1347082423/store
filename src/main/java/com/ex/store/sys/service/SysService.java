@@ -19,4 +19,8 @@ public interface SysService {
     PageAjaxResponse getAllMenu(PageParameter<ExSysMenu> pageParameter);
 
     AjaxResponse getAllMenu();
+
+    String saveMenu(ExSysMenu exSysMenu);
+
+    String isForbid(List<ExSysMenu> exSysMenus);
 }

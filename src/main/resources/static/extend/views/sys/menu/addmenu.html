@@ -3,8 +3,10 @@
     <div class="layui-form-item">
         <label for="" class="layui-form-label">上级目录</label>
         <div class="layui-input-block">
-            <input type="text" id="tree" lay-filter="tree" class="layui-input" >
-            <input type="hidden" name="pid" id="pid">
+            <input type="text" id="pTree" lay-filter="pTree" class="layui-input">
+            <script type="text/html" template>
+                <input type="hidden" name="pid" id="pid" value="{{ d.params.pid || '0' }}">
+            </script>
         </div>
     </div>
     <div class="layui-form-item">
@@ -12,7 +14,7 @@
             <label class="layui-form-label">菜单名称</label>
             <div class="layui-input-inline">
                 <script type="text/html" template>
-                    <input type="text" name="title"  lay-verify="required"
+                    <input type="text" name="title" lay-verify="required" value="{{ d.params.title || '' }}"
                            placeholder="请输入菜单名" autocomplete="off" class="layui-input">
                 </script>
             </div>
@@ -20,25 +22,31 @@
         <div class="layui-inline">
             <label class="layui-form-label">菜单title</label>
             <div class="layui-input-inline">
-                <input type="text" name="name"
-                       placeholder="请输入title" autocomplete="off" class="layui-input">
+                <script type="text/html" template>
+                    <input type="text" name="name" value="{{ d.params.name || '' }}"
+                           placeholder="请输入title" autocomplete="off" class="layui-input">
+                </script>
+
             </div>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">菜单地址</label>
         <div class="layui-input-block">
-            <input type="text" name="url"
-                   placeholder="请输入地址" autocomplete="off" class="layui-input">
+            <script type="text/html" template>
+                <input type="text" name="url" value="{{ d.params.url || '' }}"
+                       placeholder="请输入地址" autocomplete="off" class="layui-input">
+            </script>
+
         </div>
     </div>
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">所属类别</label>
             <div class="layui-input-inline">
-                <select name="category" >
+                <select name="category">
                     <option value="1" selected>系统资源</option>
-                    <option value="2" >非系统资源</option>
+                    <option value="2">非系统资源</option>
                 </select>
             </div>
         </div>
@@ -48,7 +56,7 @@
                 <script type="text/html" template>
                     <select name="type">
                         <option value="1" selected>内部打开</option>
-                        <option value="2" >ifream打开</option>
+                        <option value="2">ifream打开</option>
                     </select>
                 </script>
             </div>
@@ -58,14 +66,17 @@
         <div class="layui-inline">
             <label class="layui-form-label">是否禁用</label>
             <div class="layui-input-inline">
-                <input type="checkbox"  lay-filter="status" name="isForbid" lay-skin="switch"
+                <input type="checkbox" lay-filter="status" value="1" checked="checked" name="isForbid" lay-skin="switch"
                        lay-text="未禁用|禁用">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">排序</label>
             <div class="layui-input-inline">
-                <input type="text" name="sort" placeholder="请输入内容" class="layui-input">
+                <script type="text/html" template>
+                    <input type="text" name="sort" placeholder="请输入内容" class="layui-input"
+                           value="{{ d.params.sort || '0' }}">
+                </script>
             </div>
         </div>
     </div>
@@ -74,18 +85,23 @@
         <label for="" class="layui-form-label">选择图标</label>
         <div class="layui-input-block">
             <input type="text" id="iconPicker" lay-filter="iconPicker" class="layui-input">
-            <input type="hidden" name="icon" id="icon">
+            <script type="text/html" template>
+                <input type="hidden" name="icon" id="icon" value="{{ d.params.desc || '' }}">
+            </script>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">描述</label>
         <div class="layui-input-block">
-            <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+            <script type="text/html" template>
+                <textarea name="desc" placeholder="请输入内容" class="layui-textarea"
+                          value="{{ d.params.desc || '' }}"></textarea>
+            </script>
         </div>
     </div>
 
     <script type="text/html" template>
-        <input type="hidden" name="id" value="{{ d.params.id || '' }}">
+        <input type="hidden" name="id" value="{{ d.params.id || '0' }}">
     </script>
     <div class="layui-form-item">
         <label class="layui-form-label"></label>
@@ -95,12 +111,12 @@
     </div>
 </div>
 <script>
-    layui.use(['iconPicker','treeSelect', 'form'], function () {
-        var treeSelect = layui.treeSelect ,iconPicker = layui.iconPicker;
+    layui.use(['iconPicker', 'treeSelect', 'form'], function () {
+        var treeSelect = layui.treeSelect, iconPicker = layui.iconPicker;
         var $ = layui.$;
         treeSelect.render({
             // 选择器
-            elem: '#tree',
+            elem: '#pTree',
             // 数据
             data: '/menu/getAllMenu',
             // 异步加载方式：get/post，默认get
@@ -115,6 +131,11 @@
             },
             // 加载完成后的回调函数
             success: function (d) {
+                var pid = $("#pid").val();
+                console.log(pid)
+                if (pid != null && pid.length > 0 && pid != '0') {
+                    treeSelect.checkNode("pTree", 10)
+                }
             }
         });
         iconPicker.render({
@@ -130,8 +151,14 @@
             limit: 24,
             // 点击回调
             click: function (data) {
-                console.log(data.icon);
                 $("#icon").val(data.icon)
+            },
+            success: function (d) {
+                var icon = $("#icon").val();
+                console.log(icon)
+                if (icon != null && icon.length > 0) {
+                    iconPicker.checkNode("icon", icon)
+                }
             }
         });
     });

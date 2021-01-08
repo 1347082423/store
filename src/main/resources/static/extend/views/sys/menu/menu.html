@@ -11,7 +11,8 @@
 
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-list" style="margin-left: 300px;">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-list"
+             style="margin-left: 300px;">
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">菜单名字</label>
@@ -71,6 +72,33 @@
                 <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
             </div>
             <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
+            <script type="text/html" id="category">
+                {{# if(d.category=='1'){ }}
+                系统资源
+                {{# }else if (d.category=='2'){ }}
+                非系统资源
+                {{# }else{ }}
+                未定义
+                {{# } }}
+            </script>
+            <script type="text/html" id="isForbid">
+                {{# if(d.isForbid=='1'){ }}
+                未禁用
+                {{# }else if (d.isForbid=='2'){ }}
+                禁用
+                {{# }else{ }}
+                未定义
+                {{# } }}
+            </script>
+            <script type="text/html" id="type">
+                {{# if(d.type=='1'){ }}
+                内部打开
+                {{# }else if (d.type=='2'){ }}
+                ifream
+                {{# }else{ }}
+                未定义
+                {{# } }}
+            </script>
             <script type="text/html" id="table-content-list">
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
                         class="layui-icon layui-icon-edit"></i>编辑
@@ -84,38 +112,43 @@
 </div>
 
 <script>
-    layui.use('menu', layui.factory('menu')).use(['form', 'admin', 'menu', 'table','jqutil'], function () {
+    layui.use('menu', layui.factory('menu')).use(['form', 'admin', 'menu', 'table', 'jqutil'], function () {
         var $ = layui.$
             , admin = layui.admin
             , view = layui.view
             , table = layui.table
             , form = layui.form
-            ,jqutil = layui.jqutil;
+            , jqutil = layui.jqutil;
         form.render(null, 'app-content-list');
         $('.layuiadmin-btn-list').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
+
         var active = {
             batchdel: function () {
                 var checkStatus = table.checkStatus('LAY-app-content-list')
                     , checkData = checkStatus.data; //得到选中的数据
-
                 if (checkData.length === 0) {
                     return layer.msg('请选择数据');
                 }
-
+                //checkData = JSON.stringify({"exSysMenus":checkData});
                 layer.confirm('确定删除吗？', function (index) {
-
                     //执行 Ajax 后重载
-                    /*
-                    admin.req({
-                      url: 'xxx'
-                      //,……
+                    jqutil.render({
+                        url: "/menu/isForbid",
+                        params: checkData,
+                        type: "POST",
+                        success: function (d) {
+                            if (d.ok) {
+                                layer.msg(d.msg);
+                                layui.table.reload('LAY-app-content-list'); //重载表格
+                            }
+                        }
                     });
-                    */
+                    jqutil.loadByList();
                     table.reload('LAY-app-content-list');
-                    layer.msg('已删除');
+                    layer.close(index); //执行关闭
                 });
             }
             //添加
@@ -132,15 +165,19 @@
                             form.on('submit(layuiadmin-app-form-submit)', function (data) {
                                 var field = data.field; //获取提交的字段
                                 //提交 Ajax 成功后，关闭当前弹层并重载表格
+                                //400请求参数出错
                                 jqutil.render({
-                                    url:"menu/saveMenu",
-                                    params:field,
-                                    type:"POST",
-                                    success:function (d) {
-                                        console.log(d)
+                                    url: "/menu/saveMenu",
+                                    params: field,
+                                    type: "POST",
+                                    success: function (d) {
+                                        if (d.isOk) {
+                                            layer.msg(d.msg);
+                                            layui.table.reload('LAY-app-content-list'); //重载表格
+                                        }
                                     }
                                 });
-                                layui.table.reload('LAY-app-content-list'); //重载表格
+                                jqutil.load();
                                 layer.close(index); //执行关闭
                             });
                         });
