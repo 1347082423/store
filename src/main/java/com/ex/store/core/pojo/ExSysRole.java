@@ -3,19 +3,13 @@ package com.ex.store.core.pojo;
 
 public class ExSysRole {
 
-  private long id;
+  private Long id;
   private String name;
   private String rolename;
   private String desc;
+  private Long type;
+  private Long isForbid;
 
-
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
 
 
   public String getName() {
@@ -44,4 +38,28 @@ public class ExSysRole {
     this.desc = desc;
   }
 
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public Long getType() {
+    return type;
+  }
+
+  public void setType(Long type) {
+    this.type = type;
+  }
+
+  public Long getIsForbid() {
+    return isForbid;
+  }
+
+  public void setIsForbid(Long isForbid) {
+    this.isForbid = isForbid;
+  }
 }

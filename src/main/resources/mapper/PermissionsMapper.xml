@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ex.store.sys.mapper.PermissionsMapper">
+    <resultMap id="BaseResultMap" type="com.ex.store.core.pojo.ExSysRole">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="ROLENAME" property="rolename" jdbcType="VARCHAR"/>
+        <result column="DESC" property="desc" jdbcType="VARCHAR"/>
+        <result column="ISFORBID" property="isForbid" jdbcType="INTEGER"/>
+        <result column="TYPE" property="type" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <select id="findPermissionsListByPage" resultType="com.ex.store.core.pojo.ExSysRole"
+            parameterType="com.ex.store.core.vo.PageParameter">
+        select id,name,rolename,'desc',isForbid,type from ex_sys_role
+        <where>
+            1 = 1
+            <if test="parameter.name != null and parameter.name != ''">
+                and name LIKE concat('%',#{parameter.name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="parameter.isForbid != null and parameter.isForbid != ''">
+                and isForbid = #{parameter.isForbid,jdbcType=INTEGER}
+            </if>
+            <if test="parameter.type != null and parameter.type != ''">
+                and type = #{parameter.type,jdbcType=INTEGER}
+            </if>
+            <if test="parameter.rolename != null and parameter.rolename != ''">
+                and rolename LIKE concat('%',#{parameter.rolename,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+        limit ${(page - 1) * limit} , #{limit}
+    </select>
+
+    <select id="findPermissionsCount" resultType="Integer" parameterType="com.ex.store.core.vo.PageParameter">
+        select count(1) from ex_sys_role
+        <where>
+            1 = 1
+            <if test="parameter.name != null and parameter.name != ''">
+                and name LIKE concat('%',#{parameter.name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="parameter.isForbid != null and parameter.isForbid != ''">
+                and isForbid = #{parameter.isForbid,jdbcType=INTEGER}
+            </if>
+            <if test="parameter.type != null and parameter.type != ''">
+                and type = #{parameter.type,jdbcType=INTEGER}
+            </if>
+            <if test="parameter.rolename != null and parameter.rolename != ''">
+                and rolename LIKE concat('%',#{parameter.rolename,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

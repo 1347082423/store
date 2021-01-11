@@ -3,11 +3,14 @@ package com.ex.store.sys.service.impl;
 import com.ex.store.core.dto.MenuDto;
 import com.ex.store.core.dto.TreeDto;
 import com.ex.store.core.pojo.ExSysMenu;
+import com.ex.store.core.pojo.ExSysRole;
+import com.ex.store.core.util.LongUtils;
 import com.ex.store.core.util.TreeUtils;
 import com.ex.store.core.vo.AjaxResponse;
 import com.ex.store.core.vo.PageAjaxResponse;
 import com.ex.store.core.vo.PageParameter;
 import com.ex.store.sys.mapper.MenuMapper;
+import com.ex.store.sys.mapper.PermissionsMapper;
 import com.ex.store.sys.service.SysService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,9 @@ public class SysServiceImpl implements SysService {
 
     @Autowired
     private MenuMapper menuMapper;
+
+    @Autowired
+    private PermissionsMapper permissionsMapper;
 
     @Override
     public List<MenuDto> obtainMenu() {
@@ -64,10 +70,19 @@ public class SysServiceImpl implements SysService {
 
     @Override
     public String saveMenu(ExSysMenu exSysMenu) {
-        int count = menuMapper.saveMenu(exSysMenu);
+        int count = 0;
+        if (LongUtils.intIsNull(exSysMenu.getId())){
+            count = menuMapper.saveMenu(exSysMenu);
+        }else{
+            List<ExSysMenu> list = new ArrayList<ExSysMenu>();
+            list.add(exSysMenu);
+            count = menuMapper.updateByList(list);
+        }
         String msg = "保存失败";
-        if (count > 0){
+        if (count > 0 && exSysMenu.getId() == 0){
             msg = "保存成功";
+        }else if (count > 0 && exSysMenu.getId() != 0){
+            msg = "更新成功";
         }
         return msg;
     }
@@ -83,5 +98,13 @@ public class SysServiceImpl implements SysService {
             msg = "保存成功";
         }
         return msg;
+    }
+
+    @Override
+    public PageAjaxResponse getAllPermissions(PageParameter<ExSysRole> pageParameter) {
+        List<ExSysMenu> list = permissionsMapper.findPermissionsListByPage(pageParameter);
+        int count = permissionsMapper.findPermissionsCount(pageParameter);
+        PageAjaxResponse pageAjaxResponse = PageAjaxResponse.success(list,count);
+        return pageAjaxResponse;
     }
 }
