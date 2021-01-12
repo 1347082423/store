@@ -7,6 +7,7 @@ layui.define(['table', 'jquery', 'form'], function (exports) {
         form = layui.form;
     var tableSelect = function () {
         this.v = '1.1.0';
+        this.opt = {};
     };
 
     /**
@@ -15,7 +16,8 @@ layui.define(['table', 'jquery', 'form'], function (exports) {
     tableSelect.prototype.render = function (opt) {
         var elem = $(opt.elem);
         var tableDone = opt.table.done || function(){};
-		
+		var loadlFun = opt.loadFun;
+		this.opt = opt;
         //默认设置
         opt.searchKey = opt.searchKey || 'keyword';
         opt.searchPlaceholder = opt.searchPlaceholder || '关键词搜索';
@@ -23,9 +25,19 @@ layui.define(['table', 'jquery', 'form'], function (exports) {
         opt.table.page = opt.table.page || true;
         opt.table.height = opt.table.height || 315;
         
-        elem.on('click', function(e) {
+        elem.off('click').on('click', function(e) {
             e.stopPropagation();
-
+            //添加一个校验  校验返回true那么直接返回
+            if (typeof loadlFun == "function"){
+                if (loadlFun){
+                    layer.msg("校验失败");
+                    return false;
+                }
+            }
+            if (opt.table.url == null || opt.table.url.length < 1){
+                layer.msg("请配置资源路径");
+                return false;
+            }
             if($('div.tableSelect').length >= 1){
                 return false;
             }
@@ -44,7 +56,7 @@ layui.define(['table', 'jquery', 'form'], function (exports) {
                 tableBox += '</div>';
                 tableBox = $(tableBox);
             $('body').append(tableBox);
-            
+
             //数据缓存
             var checkedData = [];
 
@@ -216,12 +228,13 @@ layui.define(['table', 'jquery', 'form'], function (exports) {
                     }
                     elem.attr("ts-selected",selected.join(","));
                 }
-                opt.done(elem, checkStatus);
+                if (typeof opt.done == "function"){
+                    opt.done(elem, checkStatus);
+                }
                 tableBox.remove();
                 delete table.cache[tableName];
                 checkedData = [];
             }
-            
             //点击其他区域关闭
             $(document).mouseup(function(e){
                 var userSet_con = $(''+opt.elem+',.tableSelect');
@@ -239,6 +252,21 @@ layui.define(['table', 'jquery', 'form'], function (exports) {
     */
     tableSelect.prototype.hide = function (opt) {
         $('.tableSelect').remove();
+    }
+
+    tableSelect.prototype.updateParam = function (optp){
+        var opt = this.opt;
+        this.render({
+            elem: optp.elem || opt.elem,	//定义输入框input对象
+            checkedKey: optp.checkedKey || opt.checkedKey, //表格的唯一建值，非常重要，影响到选中状态 必填
+            searchKey: optp.searchKey || opt.searchKey,	//搜索输入框的name值 默认keyword
+            searchPlaceholder: optp.searchPlaceholder || opt.searchPlaceholder,	//搜索输入框的提示文字 默认关键词搜索
+            table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+                url:optp.table.url || opt.table.url,
+                cols: optp.table.cols|| opt.table.cols
+            },
+            done: optp.done || opt.done,
+        })
     }
 
     //自动完成渲染

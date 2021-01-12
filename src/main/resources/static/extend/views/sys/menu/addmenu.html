@@ -13,7 +13,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">菜单名称</label>
             <div class="layui-input-inline">
-                <script type="text/html" template>
+                <script type="text/html" template lay-done="layui.data.sendParams(d.params)">
                     <input type="text" name="title" lay-verify="required" value="{{ d.params.title || '' }}"
                            placeholder="请输入菜单名" autocomplete="off" class="layui-input">
                 </script>
@@ -112,8 +112,10 @@
 </div>
 <script>
     layui.use(['iconPicker', 'treeSelect', 'form'], function () {
-        var treeSelect = layui.treeSelect, iconPicker = layui.iconPicker;
+        var treeSelect = layui.treeSelect, iconPicker = layui.iconPicker,form = layui.form;
         var $ = layui.$;
+        form.render(null, 'layuiadmin-app-form-list');
+        var icon = "";
         treeSelect.render({
             // 选择器
             elem: '#pTree',
@@ -151,14 +153,11 @@
             // 点击回调
             click: function (data) {
                 $("#icon").val(data.icon)
-            },
-            success: function (d) {
-                var icon = $("#icon").val();
-                console.log(icon)
-                if (icon != null && icon.length > 0) {
-                    iconPicker.checkIcon("icon", icon)
-                }
             }
         });
+        layui.data.sendParams = function(params) {
+            icon = params.icon;
+            iconPicker.checkIcon("icon", icon);
+        }
     });
 </script>

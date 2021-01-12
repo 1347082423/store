@@ -51,5 +51,12 @@
         </where>
     </select>
 
+    <select id="getPermissions" parameterType="Long" resultType="java.util.Map">
+        select menu.id,menu.title from ex_sys_menu menu , ex_sys_role_resource role where role.roleid = #{id,jdbcType=INTEGER} and menu.id = role.resourceid
+    </select>
+
+    <update id="saveRoles" parameterType="com.ex.store.core.dto.RoleAndResource" >
+
+    </update>
 
 </mapper>

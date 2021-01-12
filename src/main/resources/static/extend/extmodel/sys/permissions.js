@@ -15,6 +15,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
             , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
             , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#type'}
             , {field: 'roles', title: '资源列表', width: 200}
+            , {field: 'ids', title: '资源列表', width: 200,hide:true}
             , {field: 'active', title: '操作', width: 200, toolbar: '#table-content-list'}
         ]],
     });
@@ -34,7 +35,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
         var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
         if (layEvent === 'edit') { //编辑
             admin.popup({
-                title: '修改菜单'
+                title: '修改角色'
                 , area: ['735px', '650px']
                 , id: 'LAY-popup-content-add'
                 , success: function (layero, index) {
@@ -118,7 +119,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
         //添加
         , add: function (othis) {
             admin.popup({
-                title: '添加菜单'
+                title: '添加角色'
                 , area: ['735px', '650px']
                 , id: 'LAY-popup-content-add'
                 , success: function (layero, index) {
@@ -156,29 +157,56 @@ layui.define(["form", "table", "jqutil"], function (exports) {
 
 
 layui.define('tableSelect',function (exports) {
-    var MOD_NAME = 'addPermissions',tableSelect = layui.tableSelect;
+    var MOD_NAME = 'addPermissions',tableSelect = layui.tableSelect,form = layui.form,menuResource = "/menu/index",funResource = "",resource = "",view = layui.view,$=layui.$;
+    form.render(null, 'layuiadmin-app-form-list');
+    form.on('select(type)', function (data) {
+        if (data.value == 1){
+            resource = menuResource;
+            tableSelect.updateParam({
+                searchKey: 'title',
+                table:{url:resource}
+            })
+        }
+        if (data.value == 2){
+            resource = funResource;
+            tableSelect.updateParam({
+                table:{url:resource}
+            })
+        }
+    });
+
     tableSelect.render({
         elem: '#resource',	//定义输入框input对象
-        checkedKey: 'LAY-app-content-list', //表格的唯一建值，非常重要，影响到选中状态 必填
-        searchKey: 'keyword',	//搜索输入框的name值 默认keyword
+        checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
+        searchKey: 'title',	//搜索输入框的name值 默认keyword
         searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
         table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-            url:'/permissions/index',
+            url:$('#type option:selected').val() === '2' ? funResource : menuResource,
             cols: [[ //表头
                 {width: 80, checkbox: true}
                 , {field: 'id', title: 'ID', width: 80, sort: true}
-                , {field: 'name', title: '角色名称', width: 200, sort: true}
-                , {field: 'rolename', title: '英文名称', width: 200}
+                , {field: 'title', title: '资源名称', width: 200, sort: true}
                 , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
-                , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#type'}
-                , {field: 'roles', title: '资源列表', width: 200}
-                , {field: 'active', title: '操作', width: 200, toolbar: '#table-content-list'}
+                , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#typeField'}
+                , {field: 'category', title: '菜单类别', width: 120, sort: true, templet: '#category'}
             ]]
         },
         done: function (elem, data) {
-            //选择完后的回调，包含2个返回值 elem:返回之前input对象；data:表格返回的选中的数据 []
-            //拿到data[]后 就按照业务需求做想做的事情啦~比如加个隐藏域放ID...
+            var NEWJSON = [],newId = [];
+            layui.each(data.data, function (index, item) {
+                NEWJSON.push(item.title)
+                newId.push(item.id)
+            })
+            elem.val(NEWJSON.join(","))
+            $("#resourceId").val(newId.join(","))
+
         }
-    })
+    });
+
+    layui.data.sendParams = function(params){
+        $("#resource").attr("ts-selected",params.ids);
+        $("#resource").val(params.roles);
+        $("#resourceId").val(params.ids)
+    }
     exports(MOD_NAME, {});
 })

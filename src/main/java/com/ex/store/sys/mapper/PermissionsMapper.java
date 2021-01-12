@@ -1,11 +1,12 @@
 package com.ex.store.sys.mapper;
 
-import com.ex.store.core.pojo.ExSysMenu;
+import com.ex.store.core.dto.RoleAndResource;
 import com.ex.store.core.pojo.ExSysRole;
 import com.ex.store.core.vo.PageParameter;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author wex
@@ -14,7 +15,11 @@ import java.util.List;
  **/
 @Mapper
 public interface PermissionsMapper {
-    List<ExSysMenu> findPermissionsListByPage(PageParameter<ExSysRole> pageParameter);
+    List<ExSysRole> findPermissionsListByPage(PageParameter<ExSysRole> pageParameter);
 
     int findPermissionsCount(PageParameter<ExSysRole> pageParameter);
+
+    List<Map<String, Object>> getPermissions(long id);
+
+    int saveRoles(List<RoleAndResource> roleAndResources);
 }

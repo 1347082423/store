@@ -1,6 +1,7 @@
 package com.ex.store.sys.service;
 
 import com.ex.store.core.dto.MenuDto;
+import com.ex.store.core.dto.RoleAndResource;
 import com.ex.store.core.pojo.ExSysMenu;
 import com.ex.store.core.pojo.ExSysRole;
 import com.ex.store.core.vo.AjaxResponse;
@@ -26,4 +27,6 @@ public interface SysService {
     String isForbid(List<ExSysMenu> exSysMenus);
 
     PageAjaxResponse getAllPermissions(PageParameter<ExSysRole> pageParameter);
+
+    AjaxResponse saveRoles(List<RoleAndResource> roleAndResources);
 }

@@ -4,9 +4,9 @@
         <div class="layui-inline">
             <label class="layui-form-label">角色名称</label>
             <div class="layui-input-inline">
-                <script type="text/html" template>
-                    <input type="text" name="title" lay-verify="required" value="{{ d.params.title || '' }}"
-                           placeholder="请输入菜单名" autocomplete="off" class="layui-input" lay-verify="required">
+                <script type="text/html" template lay-done="layui.data.sendParams(d.params)">
+                    <input type="text" name="name" lay-verify="required" value="{{ d.params.name || '' }}"
+                           placeholder="请输入角色名称" autocomplete="off" class="layui-input" lay-verify="required">
                 </script>
             </div>
         </div>
@@ -14,8 +14,8 @@
             <label class="layui-form-label">英文名称</label>
             <div class="layui-input-inline">
                 <script type="text/html" template>
-                    <input type="text" name="name" value="{{ d.params.name || '' }}"
-                           placeholder="请输入title" autocomplete="off" class="layui-input">
+                    <input type="text" name="rolename" value="{{ d.params.rolename || '' }}"
+                           placeholder="请输入角色英文名称" autocomplete="off" class="layui-input">
                 </script>
 
             </div>
@@ -33,10 +33,10 @@
             <label class="layui-form-label">角色类别</label>
             <div class="layui-input-inline">
                 <script type="text/html" template>
-                    <select name="type" lay-verify="required">
+                    <select name="type" id="type" lay-verify="required" lay-filter="type">
                         <option value="">请选择</option>
-                        <option value="1" >菜单系列</option>
-                        <option value="2">功能系列</option>
+                        <option value="1" {{ d.params.type === '1' ? 'selected' : '' }}>菜单系列</option>
+                        <option value="2" {{ d.params.type === '2' ? 'selected' : '' }}>功能系列</option>
                     </select>
                 </script>
             </div>
@@ -45,9 +45,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">权限列表</label>
         <div class="layui-input-block">
-            <script type="text/html" template>
-                <input type="text" name="url" id="resource" value="{{ d.params.url || '' }}" placeholder="点击选择权限信息" autocomplete="off" class="layui-input">
-            </script>
+            <input type="text" id="resource" placeholder="点击选择权限信息" autocomplete="off" class="layui-input">
+            <input type="hidden" id="resourceId" name="ids">
         </div>
     </div>
     <div class="layui-form-item">
@@ -72,7 +71,33 @@
 </div>
 
 <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
-
+<script type="text/html" id="category">
+    {{# if(d.category=='1'){ }}
+    系统资源
+    {{# }else if (d.category=='2'){ }}
+    非系统资源
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+<script type="text/html" id="isForbid">
+    {{# if(d.isForbid=='1'){ }}
+    未禁用
+    {{# }else if (d.isForbid=='2'){ }}
+    禁用
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+<script type="text/html" id="typeField">
+    {{# if(d.type=='1'){ }}
+    内部打开
+    {{# }else if (d.type=='2'){ }}
+    ifream
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
 <script>
     layui.use('addPermissions', layui.factory('addPermissions'))
 </script>

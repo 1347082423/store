@@ -1,9 +1,11 @@
 package com.ex.store.sys.service.impl;
 
 import com.ex.store.core.dto.MenuDto;
+import com.ex.store.core.dto.RoleAndResource;
 import com.ex.store.core.dto.TreeDto;
 import com.ex.store.core.pojo.ExSysMenu;
 import com.ex.store.core.pojo.ExSysRole;
+import com.ex.store.core.util.CollectionUtils;
 import com.ex.store.core.util.LongUtils;
 import com.ex.store.core.util.TreeUtils;
 import com.ex.store.core.vo.AjaxResponse;
@@ -12,11 +14,13 @@ import com.ex.store.core.vo.PageParameter;
 import com.ex.store.sys.mapper.MenuMapper;
 import com.ex.store.sys.mapper.PermissionsMapper;
 import com.ex.store.sys.service.SysService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author wex
@@ -102,9 +106,28 @@ public class SysServiceImpl implements SysService {
 
     @Override
     public PageAjaxResponse getAllPermissions(PageParameter<ExSysRole> pageParameter) {
-        List<ExSysMenu> list = permissionsMapper.findPermissionsListByPage(pageParameter);
+        List<ExSysRole> list = permissionsMapper.findPermissionsListByPage(pageParameter);
         int count = permissionsMapper.findPermissionsCount(pageParameter);
-        PageAjaxResponse pageAjaxResponse = PageAjaxResponse.success(list,count);
+        final List<RoleAndResource> roleAndResources = new ArrayList<RoleAndResource>(list.size());
+        list.stream().forEach(exSysRole ->{
+            RoleAndResource roleAndResource = new RoleAndResource();
+            BeanUtils.copyProperties(exSysRole,roleAndResource);
+            List<Map<String, Object>> permissionsMap = permissionsMapper.getPermissions(exSysRole.getId());
+            roleAndResource.setIds(CollectionUtils.ListMapToString(permissionsMap,"id"));
+            roleAndResource.setRoles(CollectionUtils.ListMapToString(permissionsMap,"title"));
+            roleAndResources.add(roleAndResource);
+        });
+        PageAjaxResponse pageAjaxResponse = PageAjaxResponse.success(roleAndResources,count);
         return pageAjaxResponse;
+    }
+
+    @Override
+    public AjaxResponse saveRoles(List<RoleAndResource> roleAndResources) {
+        int count = permissionsMapper.saveRoles(roleAndResources);
+        String msg = "数据更新失败";
+        if (count > 0){
+            msg = "数据更新成功";
+        }
+        return AjaxResponse.success(msg);
     }
 }
