@@ -2,6 +2,7 @@ package com.ex.store.sys.mapper;
 
 import com.ex.store.core.dto.RoleAndResource;
 import com.ex.store.core.pojo.ExSysRole;
+import com.ex.store.core.pojo.ExSysRoleResource;
 import com.ex.store.core.vo.PageParameter;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,4 +23,14 @@ public interface PermissionsMapper {
     List<Map<String, Object>> getPermissions(long id);
 
     int saveRoles(List<RoleAndResource> roleAndResources);
+
+    int insertRole(RoleAndResource roleAndResource);
+
+    int updateRoleResource(List<ExSysRoleResource> exSysRoleResources);
+
+    List<ExSysRoleResource> findByRoleid(ExSysRoleResource exSysRoleResource);
+
+    int saveRoleResource(List<ExSysRoleResource> exSysRoleResource);
+
+    int deletRoleResource(ExSysRoleResource exSysRoleResource);
 }

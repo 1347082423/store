@@ -53,12 +53,12 @@
     </sql>
 
     <select id="findList" resultType="com.ex.store.core.pojo.ExSysMenu">
-        select id,name,category,url,'desc',isForbid,model,sort,type,icon,pid,title from ex_sys_menu
+        select id,name,category,url,`desc`,isForbid,model,sort,type,icon,pid,title from ex_sys_menu
     </select>
 
     <select id="findListByPage" resultType="com.ex.store.core.pojo.ExSysMenu"
             parameterType="com.ex.store.core.vo.PageParameter">
-        select id,name,category,url,'desc',isForbid,model,sort,type,icon,pid,title from ex_sys_menu
+        select id,name,category,url,`desc`,isForbid,model,sort,type,icon,pid,title from ex_sys_menu
         <where>
             1 = 1
             <if test="parameter.title != null and parameter.title != ''">

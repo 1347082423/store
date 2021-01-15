@@ -3,35 +3,32 @@ package com.ex.store.core.pojo;
 
 public class ExSysRoleResource {
 
-  private long id;
-  private long roleid;
-  private long resourceid;
+  private Long id;
+  private Long roleid;
+  private Long resourceid;
 
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
-
-  public long getRoleid() {
+  public Long getRoleid() {
     return roleid;
   }
 
-  public void setRoleid(long roleid) {
+  public void setRoleid(Long roleid) {
     this.roleid = roleid;
   }
 
-
-  public long getResourceid() {
+  public Long getResourceid() {
     return resourceid;
   }
 
-  public void setResourceid(long resourceid) {
+  public void setResourceid(Long resourceid) {
     this.resourceid = resourceid;
   }
-
 }

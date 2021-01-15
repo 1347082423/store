@@ -44,10 +44,15 @@
         <div class="layui-inline">
             <label class="layui-form-label">所属类别</label>
             <div class="layui-input-inline">
-                <select name="category">
-                    <option value="1" selected>系统资源</option>
-                    <option value="2">非系统资源</option>
-                </select>
+                <script type="text/html" template>
+                    <select name="category">
+                        <option value="0">请选择</option>
+                        <option value="1" {{ d.params.category== 1 ?
+                        'selected' : '' }}>系统资源</option>
+                        <option value="2" {{ d.params.category== 2 ?
+                        'selected' : '' }}>非系统资源</option>
+                    </select>
+                </script>
             </div>
         </div>
         <div class="layui-inline">
@@ -55,8 +60,11 @@
             <div class="layui-input-inline">
                 <script type="text/html" template>
                     <select name="type">
-                        <option value="1" selected>内部打开</option>
-                        <option value="2">ifream打开</option>
+                        <option value="0">请选择</option>
+                        <option value="1" {{ d.params.type== 1 ?
+                        'selected' : '' }}>内部打开</option>
+                        <option value="2" {{ d.params.type== 2 ?
+                        'selected' : '' }}>ifream打开</option>
                     </select>
                 </script>
             </div>
@@ -66,8 +74,11 @@
         <div class="layui-inline">
             <label class="layui-form-label">是否禁用</label>
             <div class="layui-input-inline">
-                <input type="checkbox" lay-filter="status" value="1" checked="checked" name="isForbid" lay-skin="switch"
-                       lay-text="未禁用|禁用">
+                <script type="text/html" template>
+                    <input type="checkbox" lay-filter="isForbid" name="isForbid" lay-skin="switch"
+                           lay-text="未禁用|禁用" {{ d.params.isForbid== 1 ?
+                    'checked' : ''}}>
+                </script>
             </div>
         </div>
         <div class="layui-inline">
@@ -112,7 +123,7 @@
 </div>
 <script>
     layui.use(['iconPicker', 'treeSelect', 'form'], function () {
-        var treeSelect = layui.treeSelect, iconPicker = layui.iconPicker,form = layui.form;
+        var treeSelect = layui.treeSelect, iconPicker = layui.iconPicker, form = layui.form;
         var $ = layui.$;
         form.render(null, 'layuiadmin-app-form-list');
         var icon = "";
@@ -155,7 +166,7 @@
                 $("#icon").val(data.icon)
             }
         });
-        layui.data.sendParams = function(params) {
+        layui.data.sendParams = function (params) {
             icon = params.icon;
             iconPicker.checkIcon("icon", icon);
         }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ex.store.sys.mapper.UserMapper">
+
+
+    <select id="findUserListByPage" parameterType="com.ex.store.core.vo.PageParameter"
+            resultType="com.ex.store.core.dto.UserDto">
+        select `name`, `id`, `loginname` as username, `password`, `phone`, `address`, `email` from ex_sys_user
+        <where>
+            1=1
+            <if test="parameter.name != null and parameter.name != ''">
+                and 'name' = #{parameter.name,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.username != null and parameter.username != ''">
+                and 'loginname' = #{parameter.username,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.phone != null and parameter.phone != ''">
+                and 'phone' = #{parameter.phone,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.address != null and parameter.address != ''">
+                and 'address' = #{parameter.address,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.email != null and parameter.email != ''">
+                and 'email' = #{parameter.email,jdbcType=VARCHAR}
+            </if>
+        </where>
+        limit ${(page - 1) * limit} , #{limit}
+    </select>
+
+    <select id="findUserPageCount" resultType="Integer" parameterType="com.ex.store.core.vo.PageParameter">
+        select count(0) from ex_sys_user
+        <where>
+            1=1
+            <if test="parameter.name != null and parameter.name != ''">
+                and 'name' = #{parameter.name,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.username != null and parameter.username != ''">
+                and 'loginname' = #{parameter.username,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.phone != null and parameter.phone != ''">
+                and 'phone' = #{parameter.phone,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.address != null and parameter.address != ''">
+                and 'address' = #{parameter.address,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.email != null and parameter.email != ''">
+                and 'email' = #{parameter.email,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

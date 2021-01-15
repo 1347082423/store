@@ -143,11 +143,11 @@
                             if (d.ok) {
                                 layer.msg(d.msg);
                                 layui.table.reload('LAY-app-content-list'); //重载表格
+                                layer.close(index); //执行关闭
                             }
                         }
                     });
                     jqutil.loadByList();
-                    layer.close(index); //执行关闭
                 });
             }
             //添加
@@ -165,19 +165,25 @@
                                 var field = data.field; //获取提交的字段
                                 //提交 Ajax 成功后，关闭当前弹层并重载表格
                                 //400请求参数出错
+                                if(field.isForbid == "on") {
+                                    field.isForbid = "1";
+                                } else {
+                                    field.isForbid = "2";
+                                }
                                 jqutil.render({
                                     url: "/menu/saveMenu",
                                     params: field,
                                     type: "POST",
                                     success: function (d) {
-                                        if (d.isOk) {
+                                        if (d.ok) {
                                             layer.msg(d.msg);
                                             layui.table.reload('LAY-app-content-list'); //重载表格
+                                            layer.close(index); //执行关闭
                                         }
                                     }
                                 });
                                 jqutil.load();
-                                layer.close(index); //执行关闭
+
                             });
                         });
                     }

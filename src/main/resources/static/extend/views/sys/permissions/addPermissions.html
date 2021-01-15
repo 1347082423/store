@@ -25,8 +25,10 @@
         <div class="layui-inline">
             <label class="layui-form-label">是否禁用</label>
             <div class="layui-input-inline">
-                <input type="checkbox" lay-filter="status" value="1" checked="checked" name="isForbid" lay-skin="switch"
-                       lay-text="未禁用|禁用">
+                <script type="text/html" template>
+                    <input type="checkbox" lay-filter="isForbid" name="isForbid" lay-skin="switch" lay-text="未禁用|禁用"
+                           {{ d.params.isForbid== 1 ? 'checked' : ''}}>
+                </script>
             </div>
         </div>
         <div class="layui-inline">
@@ -35,8 +37,10 @@
                 <script type="text/html" template>
                     <select name="type" id="type" lay-verify="required" lay-filter="type">
                         <option value="">请选择</option>
-                        <option value="1" {{ d.params.type === '1' ? 'selected' : '' }}>菜单系列</option>
-                        <option value="2" {{ d.params.type === '2' ? 'selected' : '' }}>功能系列</option>
+                        <option value="1" {{ d.params.type== 1 ?
+                        'selected' : '' }}>菜单系列</option>
+                        <option value="2" {{ d.params.type== 2 ?
+                        'selected' : '' }}>功能系列</option>
                     </select>
                 </script>
             </div>

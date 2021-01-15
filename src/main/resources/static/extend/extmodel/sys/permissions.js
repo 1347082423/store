@@ -13,9 +13,10 @@ layui.define(["form", "table", "jqutil"], function (exports) {
             , {field: 'name', title: '角色名称', width: 200, sort: true}
             , {field: 'rolename', title: '英文名称', width: 200}
             , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
-            , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#type'}
+            , {field: 'type', title: '角色类型', width: 120, sort: true, templet: '#type'}
             , {field: 'roles', title: '资源列表', width: 200}
             , {field: 'ids', title: '资源列表', width: 200,hide:true}
+            , {field: 'desc', title: '描述', width: 200}
             , {field: 'active', title: '操作', width: 200, toolbar: '#table-content-list'}
         ]],
     });
@@ -47,41 +48,47 @@ layui.define(["form", "table", "jqutil"], function (exports) {
                             var field = data.field; //获取提交的字段
                             //提交 Ajax 成功后，关闭当前弹层并重载表格
                             //400请求参数出错
-                            /*jqutil.render({
-                                url: "/menu/saveMenu",
+                            if(field.isForbid == "on") {
+                                field.isForbid = "1";
+                            } else {
+                                field.isForbid = "2";
+                            }
+                            jqutil.render({
+                                url: "/permissions/insertRole",
                                 params: field,
                                 type: "POST",
                                 success: function (d) {
-                                    if (d.isOk) {
+                                    if (d.ok) {
                                         layer.msg(d.msg);
-                                        layui.table.reload('LAY-app-content-list'); //重载表格
+                                        table.reload('LAY-app-content-list'); //重载表格
+                                        layer.close(index);
                                     }
                                 }
                             });
-                            jqutil.load();*/
-                            layer.close(index); //执行关闭
+                            jqutil.load();
                         });
                     });
                 }
             });
         } else if (layEvent === 'del') { //删除
             var checkStatus = [];
+            data.isForbid = 2;
             checkStatus.push(data)
             layer.confirm('确定删除吗?', function (index) {
                 jqutil.render({
-                    url: "/menu/isForbid",
+                    url: "/permissions/saveRoles",
                     params: checkStatus,
                     type: "POST",
-                    success: function (d) {
+                    success: function (d,index) {
                         if (d.ok) {
                             layer.msg(d.msg);
-                            layui.table.reload('LAY-app-content-list'); //重载表格
+                            table.reload('LAY-app-content-list'); //重载表格
+                            layer.close(index);
                         }
                     }
                 });
                 jqutil.loadByList();
-                layer.close(index);
-                //向服务端发送删除指令
+
             });
         }
     });
@@ -95,6 +102,9 @@ layui.define(["form", "table", "jqutil"], function (exports) {
         batchdel: function () {
             var checkStatus = table.checkStatus('LAY-app-content-list')
                 , checkData = checkStatus.data; //得到选中的数据
+            for (var i = 0; i < checkData.length; i ++) {
+                checkData[i].isForbid = 2;
+            }
             if (checkData.length === 0) {
                 return layer.msg('请选择数据');
             }
@@ -102,18 +112,18 @@ layui.define(["form", "table", "jqutil"], function (exports) {
             layer.confirm('确定删除吗？', function (index) {
                 //执行 Ajax 后重载
                 jqutil.render({
-                    url: "/menu/isForbid",
+                    url: "/permissions/saveRoles",
                     params: checkData,
                     type: "POST",
                     success: function (d) {
                         if (d.ok) {
                             layer.msg(d.msg);
-                            layui.table.reload('LAY-app-content-list'); //重载表格
+                            table.reload('LAY-app-content-list'); //重载表格
+                            layer.close(index);
                         }
                     }
                 });
                 jqutil.loadByList();
-                layer.close(index); //执行关闭
             });
         }
         //添加
@@ -131,19 +141,25 @@ layui.define(["form", "table", "jqutil"], function (exports) {
                             var field = data.field; //获取提交的字段
                             //提交 Ajax 成功后，关闭当前弹层并重载表格
                             //400请求参数出错
+                            if(field.isForbid == "on") {
+                                field.isForbid = "1";
+                            } else {
+                                field.isForbid = "2";
+                            }
                             jqutil.render({
-                                url: "/menu/saveMenu",
+                                url: "/permissions/insertRole",
                                 params: field,
                                 type: "POST",
                                 success: function (d) {
-                                    if (d.isOk) {
+                                    if (d.ok) {
                                         layer.msg(d.msg);
-                                        layui.table.reload('LAY-app-content-list'); //重载表格
+                                        table.reload('LAY-app-content-list'); //重载表格
+                                        layer.close(index);
                                     }
                                 }
                             });
                             jqutil.load();
-                            layer.close(index); //执行关闭
+
                         });
                     });
                 }

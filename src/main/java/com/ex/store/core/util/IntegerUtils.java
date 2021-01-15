@@ -9,7 +9,7 @@ public class IntegerUtils {
 
 
     public static boolean intIsNull(Integer integer){
-        return integer == null && integer == 0;
+        return integer == null || integer == 0;
     }
 
 }

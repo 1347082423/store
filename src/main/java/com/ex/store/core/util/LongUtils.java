@@ -7,7 +7,7 @@ package com.ex.store.core.util;
  **/
 public class LongUtils {
 
-    public static boolean intIsNull(Long target){
-        return target == null && target == 0;
+    public static boolean longIsNull(Long target){
+        return target == null || target == 0;
     }
 }

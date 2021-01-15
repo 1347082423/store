@@ -1,6 +1,5 @@
 package com.ex.store.core.pojo;
 
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,7 +8,7 @@ import java.util.Collection;
 public class ExSysUser implements UserDetails {
 
   private String name;
-  private long id;
+  private Long id;
   private String username;
   private String password;
   private String phone;
@@ -17,6 +16,7 @@ public class ExSysUser implements UserDetails {
   private String email;
   private Collection<? extends GrantedAuthority> authorities;
   private boolean enabled;
+  private Long isForbid;
 
 
   @Override
@@ -62,11 +62,11 @@ public class ExSysUser implements UserDetails {
     this.name = name;
   }
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -108,5 +108,13 @@ public class ExSysUser implements UserDetails {
 
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
+  }
+
+  public Long getIsForbid() {
+    return isForbid;
+  }
+
+  public void setIsForbid(Long isForbid) {
+    this.isForbid = isForbid;
   }
 }
