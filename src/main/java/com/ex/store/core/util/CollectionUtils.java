@@ -1,11 +1,8 @@
 package com.ex.store.core.util;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -21,7 +18,7 @@ public class CollectionUtils {
      * @String filterKey
      * @return
      */
-    public static String ListMapToString(List<Map<String,Object>> source,String filterKey){
+    public static String ListMapToString(List<Map<String,Object>> source, String filterKey){
         final String values = source.stream()
                 .map(item -> item.get(filterKey))
                 .filter(Objects::nonNull)
@@ -43,4 +40,6 @@ public class CollectionUtils {
     public static boolean isNotNull(Collection collection){
         return collection != null && collection.size() > 0;
     }
+
+
 }

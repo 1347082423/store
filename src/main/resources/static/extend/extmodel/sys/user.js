@@ -15,14 +15,160 @@ layui.define(["form", "table", "jqutil"],function (exports) {
             , {field: 'phone', title: '电话', width: 120}
             , {field: 'address', title: '地址', width: 200}
             , {field: 'email', title: '邮箱', width: 200}
-            , {field: 'groupname', title: '部门列表', width: 200}
-            , {field: 'groupid', title: '部门id', width: 200,hide:true}
-            , {field: 'rolename', title: '角色列表', width: 200}
-            , {field: 'roleid', title: '角色id', width: 200,hide:true}
+            , {field: 'groupNames', title: '部门列表', width: 200}
+            , {field: 'groupIds', title: '部门id', width: 200,hide:true}
+            , {field: 'roleNames', title: '角色列表', width: 200}
+            , {field: 'roleIds', title: '角色id', width: 200,hide:true}
             , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
             , {field: 'active', title: '操作', width: 150, toolbar: '#table-content-list'}
         ]],
     });
+
+    //监听搜索
+    form.on('submit(LAY-app-contlist-search)', function (data) {
+        var field = data.field;
+        //执行重载
+        table.reload('LAY-app-content-list', {
+            where: field
+        });
+    });
+    //监听工具条
+    table.on('tool(LAY-app-content-list)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+        if (layEvent === 'edit') { //编辑
+            admin.popup({
+                title: '修改角色'
+                , area: ['735px', '650px']
+                , id: 'LAY-popup-content-add'
+                , success: function (layero, index) {
+                    view(this.id).render('sys/permissions/addPermissions', data).done(function () {
+                        //必须加  否则有些表单项加载不出来
+                        form.render(null, 'layuiadmin-app-form-list');
+                        //监听提交
+                        form.on('submit(layuiadmin-app-form-submit)', function (data) {
+                            var field = data.field; //获取提交的字段
+                            //提交 Ajax 成功后，关闭当前弹层并重载表格
+                            //400请求参数出错
+                            if(field.isForbid == "on") {
+                                field.isForbid = "1";
+                            } else {
+                                field.isForbid = "2";
+                            }
+                            jqutil.render({
+                                url: "/user/insertRole",
+                                params: field,
+                                type: "POST",
+                                success: function (d) {
+                                    if (d.ok) {
+                                        layer.msg(d.msg);
+                                        table.reload('LAY-app-content-list'); //重载表格
+                                        layer.close(index);
+                                    }
+                                }
+                            });
+                            jqutil.load();
+                        });
+                    });
+                }
+            });
+        } else if (layEvent === 'del') { //删除
+            var checkStatus = [];
+            data.isForbid = 2;
+            checkStatus.push(data)
+            layer.confirm('确定删除吗?', function (index) {
+                jqutil.render({
+                    url: "/user/delUser",
+                    params: checkStatus,
+                    type: "POST",
+                    success: function (d,index) {
+                        if (d.ok) {
+                            layer.msg(d.msg);
+                            table.reload('LAY-app-content-list'); //重载表格
+                            layer.close(index);
+                        }
+                    }
+                });
+                jqutil.loadByList();
+
+            });
+        }
+    });
+
+    $('.layuiadmin-btn-list').on('click', function () {
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
+
+    var active = {
+        batchdel: function () {
+            var checkStatus = table.checkStatus('LAY-app-content-list')
+                , checkData = checkStatus.data; //得到选中的数据
+            for (var i = 0; i < checkData.length; i ++) {
+                checkData[i].isForbid = 2;
+            }
+            if (checkData.length === 0) {
+                return layer.msg('请选择数据');
+            }
+            //checkData = JSON.stringify({"exSysMenus":checkData});
+            layer.confirm('确定删除吗？', function (index) {
+                //执行 Ajax 后重载
+                jqutil.render({
+                    url: "/permissions/saveRoles",
+                    params: checkData,
+                    type: "POST",
+                    success: function (d) {
+                        if (d.ok) {
+                            layer.msg(d.msg);
+                            table.reload('LAY-app-content-list'); //重载表格
+                            layer.close(index);
+                        }
+                    }
+                });
+                jqutil.loadByList();
+            });
+        }
+        //添加
+        , add: function (othis) {
+            admin.popup({
+                title: '添加角色'
+                , area: ['735px', '650px']
+                , id: 'LAY-popup-content-add'
+                , success: function (layero, index) {
+                    view(this.id).render('sys/permissions/addPermissions').done(function () {
+                        //必须加  否则有些表单加载不出来
+                        form.render(null, 'layuiadmin-app-form-list');
+                        //监听提交
+                        form.on('submit(layuiadmin-app-form-submit)', function (data) {
+                            var field = data.field; //获取提交的字段
+                            //提交 Ajax 成功后，关闭当前弹层并重载表格
+                            //400请求参数出错
+                            if(field.isForbid == "on") {
+                                field.isForbid = "1";
+                            } else {
+                                field.isForbid = "2";
+                            }
+                            jqutil.render({
+                                url: "/permissions/insertRole",
+                                params: field,
+                                type: "POST",
+                                success: function (d) {
+                                    if (d.ok) {
+                                        layer.msg(d.msg);
+                                        table.reload('LAY-app-content-list'); //重载表格
+                                        layer.close(index);
+                                    }
+                                }
+                            });
+                            jqutil.load();
+
+                        });
+                    });
+                }
+            });
+        }
+    };
 
     exports("user", {});
 });

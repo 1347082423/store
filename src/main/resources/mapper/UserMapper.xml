@@ -9,7 +9,7 @@
         <where>
             1=1
             <if test="parameter.name != null and parameter.name != ''">
-                and 'name' = #{parameter.name,jdbcType=VARCHAR}
+                and name LIKE concat('%',#{parameter.name,jdbcType=VARCHAR},'%')
             </if>
             <if test="parameter.username != null and parameter.username != ''">
                 and 'loginname' = #{parameter.username,jdbcType=VARCHAR}
@@ -32,7 +32,7 @@
         <where>
             1=1
             <if test="parameter.name != null and parameter.name != ''">
-                and 'name' = #{parameter.name,jdbcType=VARCHAR}
+                and name LIKE concat('%',#{parameter.name,jdbcType=VARCHAR},'%')
             </if>
             <if test="parameter.username != null and parameter.username != ''">
                 and 'loginname' = #{parameter.username,jdbcType=VARCHAR}
@@ -48,4 +48,9 @@
             </if>
         </where>
     </select>
+
+    <select id="loadGroupByUserId" parameterType="Long" resultType="java.util.Map">
+        select exgroup.`id`, exgroup.`name`, exgroup.`groupfunction` from ex_sys_group exgroup,ex_sys_user_group exuser where exuser.groupid = exgroup.id and exuser.userid = #{id,jdbcType = INTEGER}
+    </select>
+
 </mapper>

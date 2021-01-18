@@ -9,6 +9,7 @@ import com.ex.store.core.vo.AjaxResponse;
 import com.ex.store.core.vo.PageAjaxResponse;
 import com.ex.store.core.vo.PageParameter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,4 +35,8 @@ public interface SysService {
     String insertRole(RoleAndResource exSysMenus);
 
     PageAjaxResponse findUserByPage(PageParameter pageParameter);
+
+    AjaxResponse delUser(ArrayList<UserDto> userDtos);
+
+    String insertUser(UserDto userDto);
 }

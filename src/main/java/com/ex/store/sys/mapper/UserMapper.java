@@ -1,13 +1,16 @@
 package com.ex.store.sys.mapper;
 
 import com.ex.store.core.dto.UserDto;
+import com.ex.store.core.pojo.ExSysGroup;
 import com.ex.store.core.pojo.ExSysResource;
 import com.ex.store.core.pojo.ExSysRole;
 import com.ex.store.core.pojo.ExSysUser;
 import com.ex.store.core.vo.PageParameter;
 import org.apache.ibatis.annotations.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Describe
@@ -42,4 +45,8 @@ public interface UserMapper {
     List<UserDto> findUserListByPage(PageParameter pageParameter);
 
     int findUserPageCount(PageParameter pageParameter);
+
+    List<Map<String, Object>> loadGroupByUserId(Long id);
+
+    int updateUserByList(ArrayList<UserDto> userDtos);
 }

@@ -5,6 +5,7 @@ import com.ex.store.core.dto.RoleAndResource;
 import com.ex.store.core.dto.TreeDto;
 import com.ex.store.core.dto.UserDto;
 import com.ex.store.core.exception.BusinessException;
+import com.ex.store.core.pojo.ExSysGroup;
 import com.ex.store.core.pojo.ExSysMenu;
 import com.ex.store.core.pojo.ExSysRole;
 import com.ex.store.core.pojo.ExSysRoleResource;
@@ -18,13 +19,14 @@ import com.ex.store.sys.mapper.MenuMapper;
 import com.ex.store.sys.mapper.PermissionsMapper;
 import com.ex.store.sys.mapper.UserMapper;
 import com.ex.store.sys.service.SysService;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -185,6 +187,36 @@ public class SysServiceImpl implements SysService {
     public PageAjaxResponse findUserByPage(PageParameter pageParameter) {
         List<UserDto> pageList = userMapper.findUserListByPage(pageParameter);
         int count = userMapper.findUserPageCount(pageParameter);
+        //
+        if (CollectionUtils.isNull(pageList)){
+            return PageAjaxResponse.success(pageList,count);
+        }
+        for (UserDto userDto : pageList) {
+            List<ExSysRole> exSysRoles = userMapper.loadRoleByUserId(userDto.getId());
+            String roleNames = String.join(",", exSysRoles.stream().map(t -> t.getName()).distinct().collect(Collectors.toList()));
+            List<Long> collect = exSysRoles.stream().map(t -> t.getId()).distinct().collect(Collectors.toList());
+            userDto.setRoleNames(roleNames);
+            String idsString = StringUtils.join(collect, ",");
+            userDto.setRoleIds(idsString);
+            List<Map<String, Object>> maps = userMapper.loadGroupByUserId(userDto.getId());
+            userDto.setGroupIds(CollectionUtils.ListMapToString(maps, "id"));
+            userDto.setGroupNames(CollectionUtils.ListMapToString(maps, "name"));
+        }
+
         return PageAjaxResponse.success(pageList,count);
+    }
+
+    @Override
+    public AjaxResponse delUser(ArrayList<UserDto> userDtos) {
+        //更新主表信息
+        int count = userMapper.updateUserByList(userDtos);
+        //更新组信息
+        //更新权限信息
+        return null;
+    }
+
+    @Override
+    public String insertUser(UserDto userDto) {
+        return null;
     }
 }
