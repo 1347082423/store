@@ -43,7 +43,7 @@ layui.define(["form", "table", "jqutil"],function (exports) {
                 , area: ['735px', '650px']
                 , id: 'LAY-popup-content-add'
                 , success: function (layero, index) {
-                    view(this.id).render('sys/permissions/addPermissions', data).done(function () {
+                    view(this.id).render('sys/user/addUser', data).done(function () {
                         //必须加  否则有些表单项加载不出来
                         form.render(null, 'layuiadmin-app-form-list');
                         //监听提交
@@ -136,7 +136,7 @@ layui.define(["form", "table", "jqutil"],function (exports) {
                 , area: ['735px', '650px']
                 , id: 'LAY-popup-content-add'
                 , success: function (layero, index) {
-                    view(this.id).render('sys/permissions/addPermissions').done(function () {
+                    view(this.id).render('sys/user/addUser').done(function () {
                         //必须加  否则有些表单加载不出来
                         form.render(null, 'layuiadmin-app-form-list');
                         //监听提交
@@ -150,7 +150,7 @@ layui.define(["form", "table", "jqutil"],function (exports) {
                                 field.isForbid = "2";
                             }
                             jqutil.render({
-                                url: "/permissions/insertRole",
+                                url: "/user/insertRole",
                                 params: field,
                                 type: "POST",
                                 success: function (d) {
@@ -170,5 +170,53 @@ layui.define(["form", "table", "jqutil"],function (exports) {
         }
     };
 
-    exports("user", {});
+    exports("sysuser", {});
+});
+
+
+layui.define('treeTable',function (exports) {
+    var table = layui.table, form = layui.form, jqutil = layui.jqutil,$ = layui.$,admin = layui.admin,view = layui.view,treeTable = layui.treeTable;
+    var data = [{"parent_id":0,"name":"广东省","id":22,"device":[]},{"parent_id":22,"name":"深圳市","id":23,"device":[]},{"parent_id":23,"name":"龙岗区","id":24,"device":[]},{"parent_id":23,"name":"福田区","id":25,"device":[]},{"parent_id":23,"name":"南山区","id":26,"device":[]},{"parent_id":0,"name":"广西省","id":27,"device":[]},{"parent_id":27,"name":"南宁市","id":28,"device":[]},{"parent_id":22,"name":"广州市","id":29,"device":[]}];
+    var tree = treeTable.render({
+        elem: '#tree-table',
+        data: data,
+        icon_key: 'name',// 必须
+        top_value: 0,
+        primary_key: 'id',
+        parent_key: 'parent_id',
+        is_head: false,
+        cols: [
+            {
+                key: 'name',
+                title: '省份',
+            },
+            {
+                title: '',
+                align: 'right',
+                template: function(item){
+                    return '<input type="checkbox" value="'+item.id+'"  lay-filter="check" lay-skin="primary"> ';
+                }
+            }
+        ],
+        end: function(e){
+            form.render()
+        }
+    });
+    form.on('checkbox(check)', function(data){
+        treeTable.childs_checkbox(tree, 1, data.value, $(data.elem).prop('checked'));
+    });
+    $('.layui-select-title').click(function(event){
+        var pt = $(this).parents('.layui-form-select'),
+            isOpen = pt.hasClass('layui-form-selected');
+        $('.layui-form-select').removeClass('layui-form-selected');
+        isOpen || pt.addClass('layui-form-selected')
+        event.stopPropagation();
+    })
+    $('#tree-table, #tree-table2, #tree-table3').click(function(event){
+        event.stopPropagation();
+    });
+    $('.choose').click(function(){
+        $(this).parents('.layui-anim').prev().find('input').val(treeTable.checked(tree, 1, 0).join(','));
+    })
+    exports('addSysUser',{});
 });

@@ -132,10 +132,32 @@
             <if test="roleid != null and roleid != ''">
                 and roleid = #{roleid,jdbcType=INTEGER}
             </if>
-            <if test="id != null and id != ''">
+            <if test="resourceid != null and resourceid != ''">
                 and resourceid = #{resourceid,jdbcType=INTEGER}
             </if>
         </where>
     </delete>
 
+    <insert id="updateUserAndRoleByUserId" parameterType="java.util.List">
+        insert into ex_sys_user_role (`roleid`,`userid`) values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.roleid,jdbcType=INTEGER},#{item.userid,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <delete id="deletRoleUser" parameterType="com.ex.store.core.pojo.ExSysUserRole">
+        delete from ex_sys_user_role
+        <where>
+            1=1
+            <if test="id != null and id != ''">
+                and id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="roleid != null and roleid != ''">
+                and roleid = #{roleid,jdbcType=INTEGER}
+            </if>
+            <if test="userid != null and userid != ''">
+                and userid = #{userid,jdbcType=INTEGER}
+            </if>
+        </where>
+    </delete>
 </mapper>

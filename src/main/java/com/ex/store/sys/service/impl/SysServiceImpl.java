@@ -5,16 +5,15 @@ import com.ex.store.core.dto.RoleAndResource;
 import com.ex.store.core.dto.TreeDto;
 import com.ex.store.core.dto.UserDto;
 import com.ex.store.core.exception.BusinessException;
-import com.ex.store.core.pojo.ExSysGroup;
-import com.ex.store.core.pojo.ExSysMenu;
-import com.ex.store.core.pojo.ExSysRole;
-import com.ex.store.core.pojo.ExSysRoleResource;
+import com.ex.store.core.pojo.*;
 import com.ex.store.core.util.CollectionUtils;
 import com.ex.store.core.util.LongUtils;
+import com.ex.store.core.util.StringUtils;
 import com.ex.store.core.util.TreeUtils;
 import com.ex.store.core.vo.AjaxResponse;
 import com.ex.store.core.vo.PageAjaxResponse;
 import com.ex.store.core.vo.PageParameter;
+import com.ex.store.sys.mapper.GroupMapper;
 import com.ex.store.sys.mapper.MenuMapper;
 import com.ex.store.sys.mapper.PermissionsMapper;
 import com.ex.store.sys.mapper.UserMapper;
@@ -23,7 +22,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +47,10 @@ public class SysServiceImpl implements SysService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private GroupMapper groupMapper;
+
 
     @Override
     public List<MenuDto> obtainMenu() {
@@ -196,7 +198,7 @@ public class SysServiceImpl implements SysService {
             String roleNames = String.join(",", exSysRoles.stream().map(t -> t.getName()).distinct().collect(Collectors.toList()));
             List<Long> collect = exSysRoles.stream().map(t -> t.getId()).distinct().collect(Collectors.toList());
             userDto.setRoleNames(roleNames);
-            String idsString = StringUtils.join(collect, ",");
+            String idsString = org.thymeleaf.util.StringUtils.join(collect, ",");
             userDto.setRoleIds(idsString);
             List<Map<String, Object>> maps = userMapper.loadGroupByUserId(userDto.getId());
             userDto.setGroupIds(CollectionUtils.ListMapToString(maps, "id"));
@@ -210,13 +212,61 @@ public class SysServiceImpl implements SysService {
     public AjaxResponse delUser(ArrayList<UserDto> userDtos) {
         //更新主表信息
         int count = userMapper.updateUserByList(userDtos);
-        //更新组信息
-        //更新权限信息
-        return null;
+        String msg = "数据保存失败";
+        if (count > 0){
+            msg = "数据保存成功";
+        }
+        return AjaxResponse.success(msg);
     }
 
     @Override
     public String insertUser(UserDto userDto) {
-        return null;
+        int count = 0;
+        String msg = "数据更新失败";
+        if (LongUtils.longIsNull(userDto.getId())){
+            ExSysUser exSysUser = new ExSysUser();
+            BeanUtils.copyProperties(userDto,exSysUser);
+            count = userMapper.insertUser(exSysUser);
+        }else{
+            List<UserDto> userDtos = new ArrayList<UserDto>(1);
+            userDtos.add(userDto);
+            count = userMapper.updateUserByList(userDtos);
+        }
+        //维护组关系
+        if (StringUtils.isNotNull(userDto.getGroupIds()) && count != 0){
+            String ids = userDto.getGroupIds();
+            List<Long> longList = CollectionUtils.StringToList(ids);
+            final List<ExSysUserGroup> groupList = new ArrayList<ExSysUserGroup>(longList.size());
+            //删除依赖的组关系
+            ExSysUserGroup exSysUserGroup = new ExSysUserGroup();
+            exSysUserGroup.setUserid(userDto.getId());
+            groupMapper.deletGroupUser(exSysUserGroup);
+            longList.stream().forEach(l->{
+                ExSysUserGroup exSysUserGroup1 = new ExSysUserGroup();
+                exSysUserGroup1.setUserid(userDto.getId());
+                exSysUserGroup1.setGroupid(l);
+                groupList.add(exSysUserGroup1);
+            });
+            groupMapper.updateUserAndGroupByUserId(groupList);
+        }
+        if (StringUtils.isNotNull(userDto.getRoleIds()) && count != 0){
+            String ids = userDto.getGroupIds();
+            List<Long> longList = CollectionUtils.StringToList(ids);
+            final List<ExSysUserRole> roleList = new ArrayList<ExSysUserRole>(longList.size());
+            ExSysUserRole exSysUserRole = new ExSysUserRole();
+            exSysUserRole.setUserid(userDto.getId());
+            permissionsMapper.deletRoleUser(exSysUserRole);
+            longList.stream().forEach(l->{
+                ExSysUserRole sysUserRole = new ExSysUserRole();
+                sysUserRole.setUserid(userDto.getId());
+                sysUserRole.setRoleid(l);
+                roleList.add(sysUserRole);
+            });
+            permissionsMapper.updateUserAndRoleByUserId(roleList);
+        }
+        if (count != 0){
+            msg = "数据更新成功";
+        }
+        return msg;
     }
 }

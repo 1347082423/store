@@ -48,5 +48,7 @@ public interface UserMapper {
 
     List<Map<String, Object>> loadGroupByUserId(Long id);
 
-    int updateUserByList(ArrayList<UserDto> userDtos);
+    int updateUserByList(List<UserDto> userDtos);
+
+    int insertUser(ExSysUser exSysUser);
 }

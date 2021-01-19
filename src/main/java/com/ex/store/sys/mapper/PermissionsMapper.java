@@ -3,6 +3,7 @@ package com.ex.store.sys.mapper;
 import com.ex.store.core.dto.RoleAndResource;
 import com.ex.store.core.pojo.ExSysRole;
 import com.ex.store.core.pojo.ExSysRoleResource;
+import com.ex.store.core.pojo.ExSysUserRole;
 import com.ex.store.core.vo.PageParameter;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -33,4 +34,8 @@ public interface PermissionsMapper {
     int saveRoleResource(List<ExSysRoleResource> exSysRoleResource);
 
     int deletRoleResource(ExSysRoleResource exSysRoleResource);
+
+    int updateUserAndRoleByUserId(List<ExSysUserRole> exSysUserRoles);
+
+    int deletRoleUser(ExSysUserRole exSysUserRole);
 }

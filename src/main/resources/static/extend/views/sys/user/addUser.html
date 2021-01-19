@@ -1,0 +1,152 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list"
+     style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">用户名称</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="text" name="name" lay-verify="required" value="{{ d.params.name || '' }}"
+                           placeholder="请输入用户名称" autocomplete="off" class="layui-input" lay-verify="required">
+                </script>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">登录名</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="text" name="username" value="{{ d.params.username || '' }}"
+                           placeholder="请输入登录名称" autocomplete="off" class="layui-input">
+                </script>
+
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="text" name="password" value="{{ d.params.password || '' }}"
+                           placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </script>
+
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">是否禁用</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="checkbox" lay-filter="isForbid" name="isForbid" lay-skin="switch" lay-text="未禁用|禁用"
+                           {{ d.params.isForbid== 1 ? 'checked' : ''}}>
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="text" name="phone" value="{{ d.params.phone || '' }}"
+                           placeholder="请输入电话" autocomplete="off" class="layui-input">
+                </script>
+
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">住址</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="text" name="address" value="{{ d.params.address || '' }}"
+                           placeholder="请输入住址" autocomplete="off" class="layui-input">
+                </script>
+
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">email</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="text" name="email" value="{{ d.params.email || '' }}"
+                           placeholder="请输入email" autocomplete="off" class="layui-input">
+                </script>
+
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">住址</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="text" name="address" value="{{ d.params.address || '' }}"
+                           placeholder="请输入住址" autocomplete="off" class="layui-input">
+                </script>
+
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限列表</label>
+        <div class="layui-unselect layui-form-select layui-input-block">
+            <div class="layui-select-title">
+                <input class="layui-input layui-unselect" type="text" readonly="" placeholder="请选择" value="">
+                <i class="layui-edge"></i>
+            </div>
+            <dl class="layui-anim layui-anim-upbit">
+                <dd>
+                    <table class="layui-table layui-form" id="tree-table" lay-skin="line"></table>
+                </dd>
+                <dd>
+                    <button type="button" class="layui-btn layui-btn-fluid choose">确认选择</button>
+                </dd>
+            </dl>
+        </div><br/>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">组列表</label>
+        <div class="layui-input-block">
+            <input type="text" id="group" placeholder="点击选择组信息" autocomplete="off" class="layui-input">
+            <input type="hidden" id="groupName" name="ids">
+        </div>
+    </div>
+    <script type="text/html" template>
+        <input type="hidden" name="id" value="{{ d.params.id || '0' }}">
+    </script>
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-inline">
+            <input type="button" lay-submit lay-filter="layuiadmin-app-form-submit" value="确认" class="layui-btn">
+        </div>
+    </div>
+</div>
+<script type="text/html" id="category">
+    {{# if(d.category=='1'){ }}
+    系统资源
+    {{# }else if (d.category=='2'){ }}
+    非系统资源
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+<script type="text/html" id="isForbid">
+    {{# if(d.isForbid=='1'){ }}
+    未禁用
+    {{# }else if (d.isForbid=='2'){ }}
+    禁用
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+<script type="text/html" id="typeField">
+    {{# if(d.type=='1'){ }}
+    内部打开
+    {{# }else if (d.type=='2'){ }}
+    ifream
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+<script>
+    layui.use('addSysUser', layui.factory('addSysUser'))
+</script>
