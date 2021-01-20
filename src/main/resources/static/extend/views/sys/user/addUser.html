@@ -4,7 +4,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">用户名称</label>
             <div class="layui-input-inline">
-                <script type="text/html" template>
+                <script type="text/html" template lay-done="layui.data.sendParams(d.params)">
                     <input type="text" name="name" lay-verify="required" value="{{ d.params.name || '' }}"
                            placeholder="请输入用户名称" autocomplete="off" class="layui-input" lay-verify="required">
                 </script>
@@ -88,9 +88,17 @@
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">权限列表</label>
+        <div class="layui-input-block">
+            <input type="text" id="resource" placeholder="点击选择权限信息" autocomplete="off" class="layui-input">
+            <input type="hidden" id="roleId" name="ids">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">组列表与职位</label>
         <div class="layui-unselect layui-form-select layui-input-block">
             <div class="layui-select-title">
-                <input class="layui-input layui-unselect" type="text" readonly="" placeholder="请选择" value="">
+                <input class="layui-input layui-unselect" type="text" readonly="" placeholder="点击选择组信息" value="">
+                <input type="hidden" id="groupId" name="ids">
                 <i class="layui-edge"></i>
             </div>
             <dl class="layui-anim layui-anim-upbit">
@@ -101,13 +109,6 @@
                     <button type="button" class="layui-btn layui-btn-fluid choose">确认选择</button>
                 </dd>
             </dl>
-        </div><br/>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">组列表</label>
-        <div class="layui-input-block">
-            <input type="text" id="group" placeholder="点击选择组信息" autocomplete="off" class="layui-input">
-            <input type="hidden" id="groupName" name="ids">
         </div>
     </div>
     <script type="text/html" template>

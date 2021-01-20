@@ -1,5 +1,6 @@
 package com.ex.store.sys.mapper;
 
+import com.ex.store.core.pojo.ExSysGroup;
 import com.ex.store.core.pojo.ExSysUserGroup;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,4 +17,6 @@ public interface GroupMapper {
     int updateUserAndGroupByUserId(List<ExSysUserGroup> list);
 
     int deletGroupUser (ExSysUserGroup exSysUserGroup);
+
+    List<ExSysGroup> findGroupByCondition(ExSysGroup exSysGroup);
 }

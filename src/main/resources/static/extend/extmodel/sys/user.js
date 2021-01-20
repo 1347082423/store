@@ -174,26 +174,45 @@ layui.define(["form", "table", "jqutil"],function (exports) {
 });
 
 
-layui.define('treeTable',function (exports) {
-    var table = layui.table, form = layui.form, jqutil = layui.jqutil,$ = layui.$,admin = layui.admin,view = layui.view,treeTable = layui.treeTable;
+layui.define(['treeTable','tableSelect'],function (exports) {
+    var table = layui.table, form = layui.form, jqutil = layui.jqutil,$ = layui.$,admin = layui.admin,view = layui.view,treeTable = layui.treeTable,tableSelect = layui.tableSelect,paramsData = [];
     var data = [{"parent_id":0,"name":"广东省","id":22,"device":[]},{"parent_id":22,"name":"深圳市","id":23,"device":[]},{"parent_id":23,"name":"龙岗区","id":24,"device":[]},{"parent_id":23,"name":"福田区","id":25,"device":[]},{"parent_id":23,"name":"南山区","id":26,"device":[]},{"parent_id":0,"name":"广西省","id":27,"device":[]},{"parent_id":27,"name":"南宁市","id":28,"device":[]},{"parent_id":22,"name":"广州市","id":29,"device":[]}];
     var tree = treeTable.render({
         elem: '#tree-table',
-        data: data,
+        //data: data,
+        url:'group/index',
+        type:'POST',
+        params:'',
+        loadSuccess:function (e) {
+            $(e.elem).parents('.layui-anim').prev().find('input').val(paramsData.groupNames);
+            treeTable.setDefaultValues(tree, 2, paramsData.groupIds, true);
+            //groupId
+            $("#groupId").val(paramsData.groupIds);
+        },
         icon_key: 'name',// 必须
         top_value: 0,
         primary_key: 'id',
-        parent_key: 'parent_id',
+        parent_key: 'pid',
         is_head: false,
         cols: [
             {
-                key: 'name',
-                title: '省份',
+                key: 'name', title: '权限列表',
             },
             {
-                title: '',
-                align: 'right',
-                template: function(item){
+                title: '类型', align: 'center', template: function(item){
+                    var value = "";
+                    if (item.type == 1){
+                        value = "部门";
+                    }else if (item.type == 2){
+                        value = "职位";
+                    }else{
+                        value = "未定义";
+                    }
+                    return '<input type="text" value="'+value+'"  class="layui-input" disabled> ';
+                }
+            },
+            {
+                title: '', align: 'center', template: function(item){
                     return '<input type="checkbox" value="'+item.id+'"  lay-filter="check" lay-skin="primary"> ';
                 }
             }
@@ -203,7 +222,7 @@ layui.define('treeTable',function (exports) {
         }
     });
     form.on('checkbox(check)', function(data){
-        treeTable.childs_checkbox(tree, 1, data.value, $(data.elem).prop('checked'));
+        treeTable.childs_checkbox(tree, 2, data.value, $(data.elem).prop('checked'));
     });
     $('.layui-select-title').click(function(event){
         var pt = $(this).parents('.layui-form-select'),
@@ -212,11 +231,45 @@ layui.define('treeTable',function (exports) {
         isOpen || pt.addClass('layui-form-selected')
         event.stopPropagation();
     })
-    $('#tree-table, #tree-table2, #tree-table3').click(function(event){
+    $('#tree-table').click(function(event){
         event.stopPropagation();
     });
     $('.choose').click(function(){
-        $(this).parents('.layui-anim').prev().find('input').val(treeTable.checked(tree, 1, 0).join(','));
-    })
+        $(this).parents('.layui-anim').prev().find('input').val(treeTable.checked(tree, 2, 0).join(','));
+        $("#groupId").val(treeTable.checked(tree, 2, 2,false).join(','));
+    });
+
+    tableSelect.render({
+        elem: '#resource',	//定义输入框input对象
+        checkedKey: 'id', //表格的唯一建值，非常重要，影响到选中状态 必填
+        searchKey: 'title',	//搜索输入框的name值 默认keyword
+        searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
+        table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
+            url: '/permissions/index' ,
+            method: "POST",
+            cols: [[ //表头
+                {width: 80, checkbox: true}
+                , {field: 'id', title: 'ID', width: 80, sort: true}
+                , {field: 'name', title: '资源名称', width: 200, sort: true}
+                , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
+            ]]
+        },
+        done: function (elem, data) {
+            var NEWJSON = [],newId = [];
+            layui.each(data.data, function (index, item) {
+                NEWJSON.push(item.name)
+                newId.push(item.id)
+            })
+            elem.val(NEWJSON.join(","))
+            $("#roleId").val(newId.join(","))
+
+        }
+    });
+    layui.data.sendParams = function(params){
+        $("#resource").attr("ts-selected",params.roleIds);
+        $("#resource").val(params.roleNames);
+        $("#roleId").val(params.roleIds);
+        paramsData = params;
+    }
     exports('addSysUser',{});
 });

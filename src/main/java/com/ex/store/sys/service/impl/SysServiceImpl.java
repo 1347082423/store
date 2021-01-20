@@ -1,9 +1,6 @@
 package com.ex.store.sys.service.impl;
 
-import com.ex.store.core.dto.MenuDto;
-import com.ex.store.core.dto.RoleAndResource;
-import com.ex.store.core.dto.TreeDto;
-import com.ex.store.core.dto.UserDto;
+import com.ex.store.core.dto.*;
 import com.ex.store.core.exception.BusinessException;
 import com.ex.store.core.pojo.*;
 import com.ex.store.core.util.CollectionUtils;
@@ -236,7 +233,7 @@ public class SysServiceImpl implements SysService {
         if (StringUtils.isNotNull(userDto.getGroupIds()) && count != 0){
             String ids = userDto.getGroupIds();
             List<Long> longList = CollectionUtils.StringToList(ids);
-            final List<ExSysUserGroup> groupList = new ArrayList<ExSysUserGroup>(longList.size());
+            List<ExSysUserGroup> groupList = new ArrayList<ExSysUserGroup>(longList.size());
             //删除依赖的组关系
             ExSysUserGroup exSysUserGroup = new ExSysUserGroup();
             exSysUserGroup.setUserid(userDto.getId());
@@ -252,7 +249,7 @@ public class SysServiceImpl implements SysService {
         if (StringUtils.isNotNull(userDto.getRoleIds()) && count != 0){
             String ids = userDto.getGroupIds();
             List<Long> longList = CollectionUtils.StringToList(ids);
-            final List<ExSysUserRole> roleList = new ArrayList<ExSysUserRole>(longList.size());
+            List<ExSysUserRole> roleList = new ArrayList<ExSysUserRole>(longList.size());
             ExSysUserRole exSysUserRole = new ExSysUserRole();
             exSysUserRole.setUserid(userDto.getId());
             permissionsMapper.deletRoleUser(exSysUserRole);
@@ -268,5 +265,11 @@ public class SysServiceImpl implements SysService {
             msg = "数据更新成功";
         }
         return msg;
+    }
+
+    @Override
+    public List<ExSysGroup> getAllGroup(ExSysGroup exSysGroup) {
+        List<ExSysGroup> exSysGroups = groupMapper.findGroupByCondition(exSysGroup);
+        return exSysGroups;
     }
 }

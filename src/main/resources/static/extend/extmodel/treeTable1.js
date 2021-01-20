@@ -110,10 +110,6 @@ layui.define(['jquery','jqutil'], function(exports) {
 			})
 		});
 		e.end && e.end(e);
-		//设置初始化成功的后置函数
-		if (typeof e.loadSuccess == "function"){
-			e.loadSuccess(e);
-		}
 	};
 	// 同级全部选中父级选中/同级全部取消取消父级
 	tree.prototype.parents_checkbox = function(e, pid) {
@@ -134,24 +130,6 @@ layui.define(['jquery','jqutil'], function(exports) {
 			is_checked ? checkbox.addClass('layui-form-checked') : checkbox.removeClass('layui-form-checked');
 			t.childs_checkbox(e, o(this).data('id'), is_checked);
 		})
-	};
-
-	/**
-	 * 设置默认值、、多选以逗号隔开
-	 * @param e
-	 * @param columnIdx
-	 * @param id
-	 * @param is_checked
-	 */
-	tree.prototype.setDefaultValues = function(e, columnIdx,id, is_checked) {
-		if (id == null || id.length < 0){
-			return
-		}
-		var ids=id.split(",");
-		for (var i = 0;i < ids.length;i++){
-			var checkbox = o(e.elem).find('[data-id=' + ids[i] + ']').find('td').eq(columnIdx).find('.layui-form-checkbox');
-			is_checked ? checkbox.addClass('layui-form-checked') : checkbox.removeClass('layui-form-checked');
-		}
 	};
 
 	// 子级反选

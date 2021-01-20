@@ -3,19 +3,22 @@ package com.ex.store.core.pojo;
 
 public class ExSysGroup {
 
-  private long id;
+  private Long id;
   private String name;
   private String groupfunction;
+  private Long pid;
+  private Long type;
+  private Long minuser;
+  private Long maxuser;
 
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
-
 
   public String getName() {
     return name;
@@ -25,7 +28,6 @@ public class ExSysGroup {
     this.name = name;
   }
 
-
   public String getGroupfunction() {
     return groupfunction;
   }
@@ -34,4 +36,35 @@ public class ExSysGroup {
     this.groupfunction = groupfunction;
   }
 
+  public Long getPid() {
+    return pid;
+  }
+
+  public void setPid(Long pid) {
+    this.pid = pid;
+  }
+
+  public Long getType() {
+    return type;
+  }
+
+  public void setType(Long type) {
+    this.type = type;
+  }
+
+  public Long getMinuser() {
+    return minuser;
+  }
+
+  public void setMinuser(Long minuser) {
+    this.minuser = minuser;
+  }
+
+  public Long getMaxuser() {
+    return maxuser;
+  }
+
+  public void setMaxuser(Long maxuser) {
+    this.maxuser = maxuser;
+  }
 }
