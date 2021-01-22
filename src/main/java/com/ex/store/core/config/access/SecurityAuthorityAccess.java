@@ -30,7 +30,7 @@ public class SecurityAuthorityAccess {
             Collection<? extends GrantedAuthority> authorities = exSysUser.getAuthorities();
             return authorities.stream().anyMatch(authoritie -> new AntPathRequestMatcher(((GrantedAuthority) authoritie).getAuthority()).matches(request));
         }
-        return true;
+        return false;
     }
 
 }
