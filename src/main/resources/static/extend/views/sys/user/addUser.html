@@ -27,7 +27,8 @@
             <div class="layui-input-inline">
                 <script type="text/html" template>
                     <input type="text" name="password" value="{{ d.params.password || '' }}"
-                           placeholder="请输入密码" autocomplete="off" class="layui-input">
+                           placeholder="请输入密码" autocomplete="off" class="layui-input" {{ d.params.password != undefined
+                           ? 'disabled' : ''}}>
                 </script>
 
             </div>
@@ -75,30 +76,21 @@
 
             </div>
         </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">住址</label>
-            <div class="layui-input-inline">
-                <script type="text/html" template>
-                    <input type="text" name="address" value="{{ d.params.address || '' }}"
-                           placeholder="请输入住址" autocomplete="off" class="layui-input">
-                </script>
-
-            </div>
-        </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">权限列表</label>
         <div class="layui-input-block">
             <input type="text" id="resource" placeholder="点击选择权限信息" autocomplete="off" class="layui-input">
-            <input type="hidden" id="roleId" name="ids">
+            <input type="hidden" id="roleId" name="roleIds">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">组列表与职位</label>
         <div class="layui-unselect layui-form-select layui-input-block">
             <div class="layui-select-title">
-                <input class="layui-input layui-unselect" type="text" readonly="" placeholder="点击选择组信息" value="">
-                <input type="hidden" id="groupId" name="ids">
+                <input class="layui-input layui-unselect" type="text" readonly="" name="groupNames"
+                       placeholder="点击选择组信息" value="">
+                <input type="hidden" id="groupId" name="groupIds">
                 <i class="layui-edge"></i>
             </div>
             <dl class="layui-anim layui-anim-upbit">

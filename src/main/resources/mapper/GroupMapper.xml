@@ -27,7 +27,7 @@
 
     <select id="findGroupByCondition" resultType="com.ex.store.core.pojo.ExSysGroup"
             parameterType="com.ex.store.core.pojo.ExSysGroup">
-        select `id`, `name`, `groupfunction`, `pid`, `type`, `minuser`, `maxuser` from `ex_sys_group`
+        select `id`, `name`, `groupfunction`, `pid`, `type`, `minuser`, `maxuser`,`isForbid`, `sort` from `ex_sys_group`
         <where>
             1=1
             <if test="id != null and id != ''">
@@ -51,7 +51,48 @@
             <if test="maxuser != null and maxuser != ''">
                 and maxuser = #{maxuser,jdbcType=INTEGER}
             </if>
+            <if test="isForbid != null and isForbid != ''">
+                and isForbid = #{isForbid,jdbcType=INTEGER}
+            </if>
         </where>
     </select>
+
+    <update id="updateGroup" parameterType="java.util.List">
+        <foreach collection="list" index="index" separator=";" item="item">
+            update ex_sys_group
+            <set>
+                <if test="item.name != null and item.name != ''">
+                    `name` = #{item.name,jdbcType=VARCHAR},
+                </if>
+                <if test="item.groupfunction != null and item.groupfunction != ''">
+                    `groupfunction` = #{item.groupfunction,jdbcType=VARCHAR},
+                </if>
+                <if test="item.pid != null and item.pid != ''">
+                    `pid` = #{item.pid,jdbcType=INTEGER},
+                </if>
+                <if test="item.type != null and item.type != ''">
+                    `type` = #{item.type,jdbcType=INTEGER},
+                </if>
+                <if test="item.minuser != null and item.minuser != ''">
+                    `minuser` = #{item.minuser,jdbcType=INTEGER},
+                </if>
+                <if test="item.maxuser != null and item.maxuser != ''">
+                    `maxuser` = #{item.maxuser,jdbcType=INTEGER},
+                </if>
+                <if test="item.isForbid != null and item.isForbid != ''">
+                    `isForbid` = #{item.isForbid,jdbcType=INTEGER},
+                </if>
+                <if test="item.sort != null and item.sort != ''">
+                    `sort` = #{item.sort,jdbcType=INTEGER},
+                </if>
+            </set>
+            WHERE id =#{item.id,jdbcType=INTEGER}
+        </foreach>
+    </update>
+
+    <insert id="insertGroup" parameterType="com.ex.store.core.pojo.ExSysGroup" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO `ex_sys_group`(`name`, `groupfunction`, `pid`, `type`, `minuser`, `maxuser`, `isForbid`, `sort`) VALUES (#{name,jdbcType=VARCHAR},#{groupfunction,jdbcType=VARCHAR},#{pid,jdbcType=INTEGER},
+        #{type,jdbcType=INTEGER},#{minuser,jdbcType=INTEGER},#{maxuser,jdbcType=INTEGER},#{isForbid,jdbcType=INTEGER},#{sort,jdbcType=INTEGER})
+    </insert>
 
 </mapper>

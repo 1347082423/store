@@ -8,6 +8,7 @@ import com.ex.store.core.vo.PageAjaxResponse;
 import com.ex.store.core.vo.PageParameter;
 import com.ex.store.sys.service.SysService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ public class UserController {
 
     @Autowired
     private SysService sysService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     /**
      * 获取用户首页信息
@@ -57,6 +61,19 @@ public class UserController {
      */
     @PostMapping("insertUser")
     public AjaxResponse insertUser(UserDto userDto){
+        String msg = "";
+        try {
+            msg = sysService.insertUser(userDto);
+        }catch (BusinessException e){
+            msg = e.getMessage();
+        }
+        return AjaxResponse.success(msg);
+    }
+
+    @PostMapping("regist")
+    public AjaxResponse regist(UserDto userDto){
+        String encode = passwordEncoder.encode(userDto.getPassword());
+        userDto.setPassword(encode);
         String msg = "";
         try {
             msg = sysService.insertUser(userDto);

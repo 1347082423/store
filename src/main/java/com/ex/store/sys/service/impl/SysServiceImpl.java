@@ -217,6 +217,7 @@ public class SysServiceImpl implements SysService {
     }
 
     @Override
+    @Transactional
     public String insertUser(UserDto userDto) {
         int count = 0;
         String msg = "数据更新失败";
@@ -224,13 +225,14 @@ public class SysServiceImpl implements SysService {
             ExSysUser exSysUser = new ExSysUser();
             BeanUtils.copyProperties(userDto,exSysUser);
             count = userMapper.insertUser(exSysUser);
+            userDto.setId(exSysUser.getId());
         }else{
             List<UserDto> userDtos = new ArrayList<UserDto>(1);
             userDtos.add(userDto);
             count = userMapper.updateUserByList(userDtos);
         }
         //维护组关系
-        if (StringUtils.isNotNull(userDto.getGroupIds()) && count != 0){
+        if (StringUtils.isNotNull(userDto.getGroupIds()) && count != 0 && !LongUtils.longIsNull(userDto.getId())){
             String ids = userDto.getGroupIds();
             List<Long> longList = CollectionUtils.StringToList(ids);
             List<ExSysUserGroup> groupList = new ArrayList<ExSysUserGroup>(longList.size());
@@ -246,8 +248,8 @@ public class SysServiceImpl implements SysService {
             });
             groupMapper.updateUserAndGroupByUserId(groupList);
         }
-        if (StringUtils.isNotNull(userDto.getRoleIds()) && count != 0){
-            String ids = userDto.getGroupIds();
+        if (StringUtils.isNotNull(userDto.getRoleIds()) && count != 0 && !LongUtils.longIsNull(userDto.getId())){
+            String ids = userDto.getRoleIds();
             List<Long> longList = CollectionUtils.StringToList(ids);
             List<ExSysUserRole> roleList = new ArrayList<ExSysUserRole>(longList.size());
             ExSysUserRole exSysUserRole = new ExSysUserRole();
@@ -271,5 +273,37 @@ public class SysServiceImpl implements SysService {
     public List<ExSysGroup> getAllGroup(ExSysGroup exSysGroup) {
         List<ExSysGroup> exSysGroups = groupMapper.findGroupByCondition(exSysGroup);
         return exSysGroups;
+    }
+
+    @Override
+    public List<TreeDto> getGroupByTree(ExSysGroup exSysGroup) {
+        List<ExSysGroup> exSysGroups = groupMapper.findGroupByCondition(exSysGroup);
+        List<TreeDto> treeDtos = new ArrayList<TreeDto>(exSysGroups.size());
+        exSysGroups.stream().forEach(exSysGroup1 -> {
+            treeDtos.add(new TreeDto(exSysGroup1.getId(), exSysGroup1.getPid(), exSysGroup1.getName(), false, false));
+        });
+        //list转换为树形结构
+        List<TreeDto> dtos = TreeUtils.coverTreeWithChildren(treeDtos);
+        dtos.get(0).setOpen(true);
+        return dtos;
+    }
+
+    @Override
+    public AjaxResponse updateGroup(ArrayList<ExSysGroup> exSysGroups) {
+        int count = groupMapper.updateGroup(exSysGroups);
+        if (count > 0){
+            return AjaxResponse.success("数据更新成功");
+        }
+        return AjaxResponse.success("数据更新失败");
+    }
+
+    @Override
+    public String insertGroup(ExSysGroup exSysGroup) {
+        String msg = "数据插入失败";
+        int count = groupMapper.insertGroup(exSysGroup);
+        if (count > 0){
+            msg = "数据插入成功";
+        }
+        return msg;
     }
 }

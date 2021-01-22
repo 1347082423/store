@@ -1,9 +1,6 @@
 package com.ex.store.sys.service;
 
-import com.ex.store.core.dto.GroupTreeDto;
-import com.ex.store.core.dto.MenuDto;
-import com.ex.store.core.dto.RoleAndResource;
-import com.ex.store.core.dto.UserDto;
+import com.ex.store.core.dto.*;
 import com.ex.store.core.pojo.ExSysGroup;
 import com.ex.store.core.pojo.ExSysMenu;
 import com.ex.store.core.pojo.ExSysRole;
@@ -43,4 +40,10 @@ public interface SysService {
     String insertUser(UserDto userDto);
 
     List<ExSysGroup> getAllGroup(ExSysGroup exSysGroup);
+
+    List<TreeDto> getGroupByTree(ExSysGroup exSysGroup);
+
+    AjaxResponse updateGroup(ArrayList<ExSysGroup> exSysGroups);
+
+    String insertGroup(ExSysGroup exSysGroup);
 }

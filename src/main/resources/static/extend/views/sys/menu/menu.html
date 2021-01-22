@@ -11,8 +11,7 @@
 
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-list"
-             style="margin-left: 300px;">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-list">
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">菜单名字</label>
@@ -165,7 +164,7 @@
                                 var field = data.field; //获取提交的字段
                                 //提交 Ajax 成功后，关闭当前弹层并重载表格
                                 //400请求参数出错
-                                if(field.isForbid == "on") {
+                                if (field.isForbid == "on") {
                                     field.isForbid = "1";
                                 } else {
                                     field.isForbid = "2";

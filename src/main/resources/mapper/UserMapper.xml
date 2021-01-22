@@ -5,7 +5,8 @@
 
     <select id="findUserListByPage" parameterType="com.ex.store.core.vo.PageParameter"
             resultType="com.ex.store.core.dto.UserDto">
-        select `name`, `id`, `loginname` as username, `password`, `phone`, `address`, `email` from ex_sys_user
+        select `name`, `id`, `loginname` as username, `password`, `phone`, `address`, `email`, `isForbid` from
+        ex_sys_user
         <where>
             1=1
             <if test="parameter.name != null and parameter.name != ''">
@@ -60,8 +61,8 @@
                 <if test="item.name != null and item.name != ''">
                     name = #{item.name,jdbcType=VARCHAR},
                 </if>
-                <if test="item.loginname != null and item.loginname != ''">
-                    loginname = #{item.loginname,jdbcType=VARCHAR},
+                <if test="item.username != null and item.username != ''">
+                    loginname = #{item.username,jdbcType=VARCHAR},
                 </if>
                 <if test="item.password != null and item.password != ''">
                     password = #{item.password,jdbcType=VARCHAR},
@@ -83,9 +84,9 @@
         </foreach>
     </update>
 
-    <insert id="insertUser" parameterType="com.ex.store.core.pojo.ExSysUser">
-        insert into (`name`, `loginname`, `password`, `phone`, `address`, `email`, `isForbid`) values (
-        #{name,jdbcType=VARCHAR},#{loginname,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},
+    <insert id="insertUser" parameterType="com.ex.store.core.pojo.ExSysUser" keyProperty="id" useGeneratedKeys="true">
+        insert into ex_sys_user (`name`, `loginname`, `password`, `phone`, `address`, `email`, `isForbid`) values (
+        #{name,jdbcType=VARCHAR},#{username,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},
         #{email,jdbcType=VARCHAR},#{isForbid,jdbcType=INTEGER}
         )
     </insert>

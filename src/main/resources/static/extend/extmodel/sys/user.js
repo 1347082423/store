@@ -57,7 +57,7 @@ layui.define(["form", "table", "jqutil"],function (exports) {
                                 field.isForbid = "2";
                             }
                             jqutil.render({
-                                url: "/user/insertRole",
+                                url: "/user/insertUser",
                                 params: field,
                                 type: "POST",
                                 success: function (d) {
@@ -105,17 +105,17 @@ layui.define(["form", "table", "jqutil"],function (exports) {
         batchdel: function () {
             var checkStatus = table.checkStatus('LAY-app-content-list')
                 , checkData = checkStatus.data; //得到选中的数据
-            for (var i = 0; i < checkData.length; i ++) {
-                checkData[i].isForbid = 2;
-            }
             if (checkData.length === 0) {
                 return layer.msg('请选择数据');
+            }
+            for (var i = 0; i < checkData.length; i ++) {
+                checkData[i].isForbid = 2;
             }
             //checkData = JSON.stringify({"exSysMenus":checkData});
             layer.confirm('确定删除吗？', function (index) {
                 //执行 Ajax 后重载
                 jqutil.render({
-                    url: "/permissions/saveRoles",
+                    url: "/user/delUser",
                     params: checkData,
                     type: "POST",
                     success: function (d) {
@@ -150,7 +150,7 @@ layui.define(["form", "table", "jqutil"],function (exports) {
                                 field.isForbid = "2";
                             }
                             jqutil.render({
-                                url: "/user/insertRole",
+                                url: "/user/regist",
                                 params: field,
                                 type: "POST",
                                 success: function (d) {
@@ -176,7 +176,6 @@ layui.define(["form", "table", "jqutil"],function (exports) {
 
 layui.define(['treeTable','tableSelect'],function (exports) {
     var table = layui.table, form = layui.form, jqutil = layui.jqutil,$ = layui.$,admin = layui.admin,view = layui.view,treeTable = layui.treeTable,tableSelect = layui.tableSelect,paramsData = [];
-    var data = [{"parent_id":0,"name":"广东省","id":22,"device":[]},{"parent_id":22,"name":"深圳市","id":23,"device":[]},{"parent_id":23,"name":"龙岗区","id":24,"device":[]},{"parent_id":23,"name":"福田区","id":25,"device":[]},{"parent_id":23,"name":"南山区","id":26,"device":[]},{"parent_id":0,"name":"广西省","id":27,"device":[]},{"parent_id":27,"name":"南宁市","id":28,"device":[]},{"parent_id":22,"name":"广州市","id":29,"device":[]}];
     var tree = treeTable.render({
         elem: '#tree-table',
         //data: data,
@@ -208,7 +207,7 @@ layui.define(['treeTable','tableSelect'],function (exports) {
                     }else{
                         value = "未定义";
                     }
-                    return '<input type="text" value="'+value+'"  class="layui-input" disabled> ';
+                    return '<p> '+value+'</p>';
                 }
             },
             {

@@ -4,6 +4,7 @@ import com.ex.store.core.pojo.ExSysGroup;
 import com.ex.store.core.pojo.ExSysUserGroup;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,4 +20,8 @@ public interface GroupMapper {
     int deletGroupUser (ExSysUserGroup exSysUserGroup);
 
     List<ExSysGroup> findGroupByCondition(ExSysGroup exSysGroup);
+
+    int updateGroup(ArrayList<ExSysGroup> exSysGroups);
+
+    int insertGroup(ExSysGroup exSysGroup);
 }

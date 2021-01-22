@@ -8,8 +8,10 @@ public class ExSysGroup {
   private String groupfunction;
   private Long pid;
   private Long type;
+  private Long isForbid;
   private Long minuser;
   private Long maxuser;
+  private Long sort;
 
 
   public Long getId() {
@@ -66,5 +68,21 @@ public class ExSysGroup {
 
   public void setMaxuser(Long maxuser) {
     this.maxuser = maxuser;
+  }
+
+  public Long getIsForbid() {
+    return isForbid;
+  }
+
+  public void setIsForbid(Long isForbid) {
+    this.isForbid = isForbid;
+  }
+
+  public Long getSort() {
+    return sort;
+  }
+
+  public void setSort(Long sort) {
+    this.sort = sort;
   }
 }

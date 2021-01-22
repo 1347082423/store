@@ -3848,6 +3848,7 @@ layui.define(['form', 'jquery'], function (exports) { //提示：模块也可以
     var elem = options.elem,
         // 请求地址
         data = options.data,
+        params = options.params || {},
         // 请求方式
         type = options.type === undefined ? 'GET' : options.type,
         // 节点点击回调
@@ -3880,6 +3881,7 @@ layui.define(['form', 'jquery'], function (exports) { //提示：模块也可以
           url: data,
           type: type,
           dataType: 'json',
+          data:params,
           success: function (d) {
             d = d.data;
             DATA = d;
