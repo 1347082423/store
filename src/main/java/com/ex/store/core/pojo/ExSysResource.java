@@ -6,9 +6,9 @@ public class ExSysResource {
   private String name;
   private String category;
   private String url;
-  private long id;
+  private Long id;
   private String desc;
-  private long isForbid;
+  private Long isForbid;
   private String model;
 
 
@@ -39,30 +39,12 @@ public class ExSysResource {
   }
 
 
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
-
-
   public String getDesc() {
     return desc;
   }
 
   public void setDesc(String desc) {
     this.desc = desc;
-  }
-
-
-  public long getIsForbid() {
-    return isForbid;
-  }
-
-  public void setIsForbid(long isForbid) {
-    this.isForbid = isForbid;
   }
 
 
@@ -74,4 +56,19 @@ public class ExSysResource {
     this.model = model;
   }
 
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public Long getIsForbid() {
+    return isForbid;
+  }
+
+  public void setIsForbid(Long isForbid) {
+    this.isForbid = isForbid;
+  }
 }

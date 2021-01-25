@@ -38,14 +38,18 @@ public class PortalController {
         return "login";
     }
 
-    @GetMapping("/index")
-    public String index() {
+    @RequestMapping("/index2")
+    public String index2() {
         return "index2";
     }
 
-    @GetMapping("/index2")
-    public String index2() {
-        return "index2";
+    @GetMapping("/loginFail")
+    public String loginFail() {
+        return "404";
+    }
+    @GetMapping("/index")
+    public String index() {
+        return "index";
     }
 
     @GetMapping("/delete")

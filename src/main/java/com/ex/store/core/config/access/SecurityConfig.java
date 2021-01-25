@@ -38,6 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().mvcMatchers("/lib/**");
         web.ignoring().mvcMatchers("/image/**");
         web.ignoring().mvcMatchers("/json/**");
+        web.ignoring().mvcMatchers("/extend/**");
+        web.ignoring().mvcMatchers("/favicon.ico");
 
     }
 
@@ -47,11 +49,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().disable();
         http.formLogin() //表单登陆 1
                 .loginPage("/hello") //指定登陆页面
+                .successForwardUrl("/index2")
+                .failureForwardUrl("/failure")
                 .and()
                 .logout().logoutUrl("/delete")
                 .and()
                 .authorizeRequests() //开启登录校验
-                .antMatchers("/hello","/failure","/favicon.ico","/index","/index2","/index3").permitAll()//hello路径不需要校验
+//                .antMatchers("/hello","/failure","/favicon.ico").permitAll()//hello路径不需要校验
                 .anyRequest().access("@securityAuthorityAccess.hasPermit(request,authentication)");
     }
 

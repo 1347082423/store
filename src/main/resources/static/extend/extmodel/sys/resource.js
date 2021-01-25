@@ -23,7 +23,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
     //第一个实例
     table.render({
         elem: '#LAY-app-content-list',
-        url: '/menu/index' //数据接口
+        url: '/resource/index' //数据接口
         , method: "POST"
         , page: true //开启分页
         , cols: [[ //表头
@@ -32,7 +32,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
             , {field: 'title', title: '菜单名字', width: 200, sort: true}
             , {field: 'name', title: '菜单name', width: 200}
             , {field: 'category', title: '类别', width: 100, sort: true, templet: '#category'}
-            , {field: 'url', title: '跳转地址', width: 200}
+            , {field: 'url', title: '资源路径', width: 200}
             , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
             , {field: 'model', title: '所属model', width: 120, sort: true}
             , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#type'}

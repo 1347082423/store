@@ -10,10 +10,7 @@ import com.ex.store.core.util.TreeUtils;
 import com.ex.store.core.vo.AjaxResponse;
 import com.ex.store.core.vo.PageAjaxResponse;
 import com.ex.store.core.vo.PageParameter;
-import com.ex.store.sys.mapper.GroupMapper;
-import com.ex.store.sys.mapper.MenuMapper;
-import com.ex.store.sys.mapper.PermissionsMapper;
-import com.ex.store.sys.mapper.UserMapper;
+import com.ex.store.sys.mapper.*;
 import com.ex.store.sys.service.SysService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +41,9 @@ public class SysServiceImpl implements SysService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ResourceMapper resourceMapper;
 
     @Autowired
     private GroupMapper groupMapper;
@@ -305,5 +305,11 @@ public class SysServiceImpl implements SysService {
             msg = "数据插入成功";
         }
         return msg;
+    }
+
+    @Override
+    public PageAjaxResponse findResourceByPageCondition(PageParameter<ExSysResource> pageParameter) {
+        List<ExSysResource> list = resourceMapper.findResourceByCondition(pageParameter);
+        return PageAjaxResponse.success(list,list.size());
     }
 }
