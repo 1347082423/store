@@ -1,0 +1,98 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list"
+     style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label for="" class="layui-form-label">所属菜单</label>
+        <div class="layui-input-block">
+            <input type="text" id="pTree" lay-filter="pTree" class="layui-input">
+            <script type="text/html" template>
+                <input type="hidden" name="pid" id="pid" value="{{ d.params.pid || '0' }}">
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">菜单名称</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template lay-done="layui.data.sendParams(d.params)">
+                    <input type="text" name="title" lay-verify="required" value="{{ d.params.title || '' }}"
+                           placeholder="请输入菜单名" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">是否禁用</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="checkbox" lay-filter="isForbid" name="isForbid" lay-skin="switch"
+                           lay-text="未禁用|禁用" {{ d.params.isForbid== 1 ?
+                    'checked' : ''}}>
+                </script>
+            </div>
+        </div>
+
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单地址</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <input type="text" name="url" value="{{ d.params.url || '' }}"
+                       placeholder="请输入地址" autocomplete="off" class="layui-input">
+            </script>
+
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">权限限制</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <select name="category">
+                        <option value="0">请选择</option>
+                        <option value="1" {{ d.params.category== 1 ?
+                        'selected' : '' }}>权限限制</option>
+                        <option value="2" {{ d.params.category== 2 ?
+                        'selected' : '' }}>非权限限制</option>
+                    </select>
+                </script>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <select name="type">
+                        <option value="0">请选择</option>
+                        <option value="1" {{ d.params.type== 1 ?
+                        'selected' : '' }}>查询</option>
+                        <option value="2" {{ d.params.type== 2 ?
+                        'selected' : '' }}>添加</option>
+                        <option value="3" {{ d.params.type== 3 ?
+                        'selected' : '' }}>更新</option>
+                    </select>
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <textarea name="desc" placeholder="请输入内容" class="layui-textarea"
+                          value="{{ d.params.desc || '' }}"></textarea>
+            </script>
+        </div>
+    </div>
+
+    <script type="text/html" template>
+        <input type="hidden" name="id" value="{{ d.params.id || '0' }}">
+    </script>
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-inline">
+            <input type="button" lay-submit lay-filter="layuiadmin-app-form-submit" value="确认" class="layui-btn">
+        </div>
+    </div>
+</div>
+<script>
+    layui.use('addresource', layui.factory('addresource'))
+</script>

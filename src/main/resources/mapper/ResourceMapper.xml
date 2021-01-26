@@ -12,17 +12,29 @@
             <if test="parameter.name != null and parameter.name != ''">
                 and name LIKE concat('%',#{parameter.name,jdbcType=VARCHAR},'%')
             </if>
-            <if test="parameter.username != null and parameter.username != ''">
-                and 'loginname' = #{parameter.username,jdbcType=VARCHAR}
+            <if test="parameter.category != null and parameter.category != ''">
+                and 'category' = #{parameter.category,jdbcType=VARCHAR}
             </if>
-            <if test="parameter.phone != null and parameter.phone != ''">
-                and 'phone' = #{parameter.phone,jdbcType=VARCHAR}
+            <if test="parameter.url != null and parameter.url != ''">
+                and 'url' = #{parameter.url,jdbcType=VARCHAR}
             </if>
-            <if test="parameter.address != null and parameter.address != ''">
-                and 'address' = #{parameter.address,jdbcType=VARCHAR}
+            <if test="parameter.desc != null and parameter.desc != ''">
+                and 'desc' = #{parameter.desc,jdbcType=VARCHAR}
             </if>
-            <if test="parameter.email != null and parameter.email != ''">
-                and 'email' = #{parameter.email,jdbcType=VARCHAR}
+            <if test="parameter.isForbid != null and parameter.isForbid != ''">
+                and 'isForbid' = #{parameter.isForbid,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.model != null and parameter.model != ''">
+                and 'model' = #{parameter.model,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.type != null and parameter.type != ''">
+                and 'type' = #{parameter.type,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.sort != null and parameter.sort != ''">
+                and 'sort' = #{parameter.sort,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.icon != null and parameter.icon != ''">
+                and 'icon' = #{parameter.icon,jdbcType=VARCHAR}
             </if>
         </where>
         limit ${(page - 1) * limit} , #{limit}

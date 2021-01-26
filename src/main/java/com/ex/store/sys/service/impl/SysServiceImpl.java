@@ -312,4 +312,9 @@ public class SysServiceImpl implements SysService {
         List<ExSysResource> list = resourceMapper.findResourceByCondition(pageParameter);
         return PageAjaxResponse.success(list,list.size());
     }
+
+    @Override
+    public String saveResource(ExSysResource exSysResource) {
+        return null;
+    }
 }

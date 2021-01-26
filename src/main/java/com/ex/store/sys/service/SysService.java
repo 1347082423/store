@@ -49,4 +49,6 @@ public interface SysService {
     String insertGroup(ExSysGroup exSysGroup);
 
     PageAjaxResponse findResourceByPageCondition(PageParameter<ExSysResource> pageParameter);
+
+    String saveResource(ExSysResource exSysResource);
 }

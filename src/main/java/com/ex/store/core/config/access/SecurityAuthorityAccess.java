@@ -33,14 +33,6 @@ public class SecurityAuthorityAccess {
         skipUrls.add("/index");
         skipUrls.add("/obtainmenu");
         skipUrls.add("/favicon.ico");
-        Object principal = authentication.getPrincipal();
-        ExSysUser exSysUser = null;
-        if (principal instanceof ExSysUser)
-            exSysUser = (ExSysUser) principal;
-        if (exSysUser != null) {
-            Collection<? extends GrantedAuthority> authorities = exSysUser.getAuthorities();
-            return authorities.stream().anyMatch(authoritie -> new AntPathRequestMatcher(((GrantedAuthority) authoritie).getAuthority()).matches(request));
-        }
         if (!CollectionUtils.isNull(skipUrls)) {
             for (String skipUrl : skipUrls) {
                 AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(skipUrl);
@@ -50,6 +42,15 @@ public class SecurityAuthorityAccess {
             }
 
         }
+        Object principal = authentication.getPrincipal();
+        ExSysUser exSysUser = null;
+        if (principal instanceof ExSysUser)
+            exSysUser = (ExSysUser) principal;
+        if (exSysUser != null) {
+            Collection<? extends GrantedAuthority> authorities = exSysUser.getAuthorities();
+            return authorities.stream().anyMatch(authoritie -> new AntPathRequestMatcher(((GrantedAuthority) authoritie).getAuthority()).matches(request));
+        }
+
         return false;
     }
 

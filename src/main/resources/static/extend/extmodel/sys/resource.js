@@ -29,15 +29,12 @@ layui.define(["form", "table", "jqutil"], function (exports) {
         , cols: [[ //表头
             {width: 80, checkbox: true}
             , {field: 'id', title: 'ID', width: 80, sort: true}
-            , {field: 'title', title: '菜单名字', width: 200, sort: true}
-            , {field: 'name', title: '菜单name', width: 200}
+            , {field: 'name', title: '资源名字', width: 200}
             , {field: 'category', title: '类别', width: 100, sort: true, templet: '#category'}
             , {field: 'url', title: '资源路径', width: 200}
             , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
             , {field: 'model', title: '所属model', width: 120, sort: true}
             , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#type'}
-            , {field: 'sort', title: '排序', width: 100}
-            , {field: 'icon', title: '图标', width: 160}
             , {field: 'pid', title: 'pid',hide:true, width: 100}
             , {field: 'active', title: '操作', width: 200, toolbar: '#table-content-list'}
         ]],
@@ -134,11 +131,11 @@ layui.define(["form", "table", "jqutil"], function (exports) {
         //添加
         , add: function (othis) {
             admin.popup({
-                title: '添加菜单'
+                title: '添加资源'
                 , area: ['735px', '650px']
                 , id: 'LAY-popup-content-add'
                 , success: function (layero, index) {
-                    view(this.id).render('sys/menu/addmenu').done(function () {
+                    view(this.id).render('sys/resource/addresource').done(function () {
                         //必须加  否则有些表单加载不出来
                         form.render(null, 'layuiadmin-app-form-list');
                         //监听提交
@@ -152,7 +149,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
                                 field.isForbid = "2";
                             }
                             jqutil.render({
-                                url: "/menu/saveMenu",
+                                url: "/resource/saveResource",
                                 params: field,
                                 type: "POST",
                                 success: function (d) {
@@ -173,4 +170,35 @@ layui.define(["form", "table", "jqutil"], function (exports) {
     };
 
     exports('resource', {})
+});
+
+layui.define(['treeSelect', 'form'],function (exports) {
+    var treeSelect = layui.treeSelect, form = layui.form;
+    var $ = layui.$;
+    form.render(null, 'layuiadmin-app-form-list');
+    var icon = "";
+    treeSelect.render({
+        // 选择器
+        elem: '#pTree',
+        // 数据
+        data: '/menu/getAllMenu',
+        // 异步加载方式：get/post，默认get
+        type: 'get',
+        // 占位符
+        placeholder: '上级菜单',
+        // 是否开启搜索功能：true/false，默认false
+        search: true,
+        // 点击回调
+        click: function (d) {
+            $("#pid").val(d.current.id)
+        },
+        // 加载完成后的回调函数
+        success: function (d) {
+            var pid = $("#pid").val();
+            if (pid != null && pid.length > 0) {
+                treeSelect.checkNode("pTree", pid);
+            }
+        }
+    });
+    exports('addresource',{})
 });

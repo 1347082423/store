@@ -28,4 +28,10 @@ public class ResourceController {
         PageAjaxResponse ajaxResponse = sysService.findResourceByPageCondition(pageParameter);
         return ajaxResponse;
     }
+
+    @PostMapping("saveResource")
+    public AjaxResponse saveResource(ExSysResource exSysResource){
+        String msg = sysService.saveResource(exSysResource);
+        return AjaxResponse.success();
+    }
 }
