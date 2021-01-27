@@ -1,5 +1,6 @@
 layui.define(["form", "table", "jqutil"], function (exports) {
-    var table = layui.table, form = layui.form, jqutil = layui.jqutil,$ = layui.$,admin = layui.admin,view = layui.view;
+    var table = layui.table, form = layui.form, jqutil = layui.jqutil, $ = layui.$, admin = layui.admin,
+        view = layui.view;
     form.render(null, 'app-content-list');
     //第一个实例
     table.render({
@@ -15,7 +16,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
             , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
             , {field: 'type', title: '角色类型', width: 120, sort: true, templet: '#type'}
             , {field: 'roles', title: '资源列表', width: 200}
-            , {field: 'ids', title: '资源列表', width: 200,hide:true}
+            , {field: 'ids', title: '资源列表', width: 200, hide: true}
             , {field: 'desc', title: '描述', width: 200}
             , {field: 'active', title: '操作', width: 200, toolbar: '#table-content-list'}
         ]],
@@ -48,7 +49,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
                             var field = data.field; //获取提交的字段
                             //提交 Ajax 成功后，关闭当前弹层并重载表格
                             //400请求参数出错
-                            if(field.isForbid == "on") {
+                            if (field.isForbid == "on") {
                                 field.isForbid = "1";
                             } else {
                                 field.isForbid = "2";
@@ -79,7 +80,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
                     url: "/permissions/saveRoles",
                     params: checkStatus,
                     type: "POST",
-                    success: function (d,index) {
+                    success: function (d, index) {
                         if (d.ok) {
                             layer.msg(d.msg);
                             table.reload('LAY-app-content-list'); //重载表格
@@ -102,7 +103,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
         batchdel: function () {
             var checkStatus = table.checkStatus('LAY-app-content-list')
                 , checkData = checkStatus.data; //得到选中的数据
-            for (var i = 0; i < checkData.length; i ++) {
+            for (var i = 0; i < checkData.length; i++) {
                 checkData[i].isForbid = 2;
             }
             if (checkData.length === 0) {
@@ -141,7 +142,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
                             var field = data.field; //获取提交的字段
                             //提交 Ajax 成功后，关闭当前弹层并重载表格
                             //400请求参数出错
-                            if(field.isForbid == "on") {
+                            if (field.isForbid == "on") {
                                 field.isForbid = "1";
                             } else {
                                 field.isForbid = "2";
@@ -172,22 +173,36 @@ layui.define(["form", "table", "jqutil"], function (exports) {
 });
 
 
-layui.define('tableSelect',function (exports) {
-    var MOD_NAME = 'addPermissions',tableSelect = layui.tableSelect,form = layui.form,menuResource = "/menu/index",funResource = "",resource = "",view = layui.view,$=layui.$;
+layui.define('tableSelect', function (exports) {
+    var MOD_NAME = 'addPermissions', tableSelect = layui.tableSelect, form = layui.form, menuResource = "/menu/index",
+        funResource = "/resource/index", resource = "", view = layui.view, $ = layui.$,displayName = "";
     form.render(null, 'layuiadmin-app-form-list');
+    //$('#type option:selected').val() === '2' ? 'name' : 'title';
+    displayName = $('#type option:selected').val() === '2' ? 'name' : 'title';
+    var menuCols = [[ //表头
+        {width: 80, checkbox: true}
+        , {field: 'id', title: 'ID', width: 80, sort: true}
+        , {field: 'title', title: '资源名称', width: 200, sort: true}
+        , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
+        , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#typeField'}
+        , {field: 'category', title: '菜单类别', width: 120, sort: true, templet: '#category'}
+    ]];
+    var funCols = [[ //表头
+        {width: 80, checkbox: true}
+        , {field: 'id', title: 'ID', width: 80, sort: true}
+        , {field: 'name', title: '资源名称', width: 200, sort: true}
+        , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
+        , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#typeField'}
+        , {field: 'category', title: '菜单类别', width: 120, sort: true, templet: '#category'}
+    ]];
     form.on('select(type)', function (data) {
-        if (data.value == 1){
-            resource = menuResource;
-            tableSelect.updateParam({
-                searchKey: 'title',
-                table:{url:resource}
-            })
+        if (data.value == 1) {
+            displayName = "title";
+            initLoadTable(menuResource,displayName,menuCols);
         }
-        if (data.value == 2){
-            resource = funResource;
-            tableSelect.updateParam({
-                table:{url:resource}
-            })
+        if (data.value == 2) {
+            displayName = "name";
+            initLoadTable(funResource,displayName,funCols)
         }
     });
 
@@ -197,20 +212,13 @@ layui.define('tableSelect',function (exports) {
         searchKey: 'title',	//搜索输入框的name值 默认keyword
         searchPlaceholder: '关键词搜索',	//搜索输入框的提示文字 默认关键词搜索
         table: {	//定义表格参数，与LAYUI的TABLE模块一致，只是无需再定义表格elem
-            url:$('#type option:selected').val() === '2' ? funResource : menuResource,
-            cols: [[ //表头
-                {width: 80, checkbox: true}
-                , {field: 'id', title: 'ID', width: 80, sort: true}
-                , {field: 'title', title: '资源名称', width: 200, sort: true}
-                , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
-                , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#typeField'}
-                , {field: 'category', title: '菜单类别', width: 120, sort: true, templet: '#category'}
-            ]]
+            url: $('#type option:selected').val() === '2' ? funResource : menuResource,
+            cols: $('#type option:selected').val() === '2' ? funCols : menuCols,
         },
         done: function (elem, data) {
-            var NEWJSON = [],newId = [];
+            var NEWJSON = [], newId = [];
             layui.each(data.data, function (index, item) {
-                NEWJSON.push(item.title)
+                NEWJSON.push(item[displayName])
                 newId.push(item.id)
             })
             elem.val(NEWJSON.join(","))
@@ -219,10 +227,28 @@ layui.define('tableSelect',function (exports) {
         }
     });
 
-    layui.data.sendParams = function(params){
-        $("#resource").attr("ts-selected",params.ids);
+    layui.data.sendParams = function (params) {
+        $("#resource").attr("ts-selected", params.ids);
         $("#resource").val(params.roles);
-        $("#resourceId").val(params.ids)
+        $("#resourceId").val(params.ids);
+        if (params.type == 1) {
+            displayName = "title";
+            initLoadTable(menuResource,displayName,menuCols);
+        }
+        if (params.type  == 2) {
+            displayName = "name";
+            initLoadTable(funResource,displayName,funCols)
+
+        }
+    }
+    function initLoadTable(url,key,cols) {
+        tableSelect.updateParam({
+            searchKey: key,
+            table: {
+                url: url,
+                cols: cols
+            }
+        })
     }
     exports(MOD_NAME, {});
 })

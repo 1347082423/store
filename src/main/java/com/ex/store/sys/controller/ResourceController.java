@@ -7,8 +7,11 @@ import com.ex.store.core.vo.PageParameter;
 import com.ex.store.sys.service.SysService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 
 /**
  * @Author wex
@@ -22,7 +25,7 @@ public class ResourceController {
     @Autowired
     private SysService sysService;
 
-    @PostMapping("index")
+    @RequestMapping("index")
     public PageAjaxResponse index(ExSysResource exSysResource, PageParameter<ExSysResource> pageParameter){
         pageParameter.setParameter(exSysResource);
         PageAjaxResponse ajaxResponse = sysService.findResourceByPageCondition(pageParameter);
@@ -32,6 +35,12 @@ public class ResourceController {
     @PostMapping("saveResource")
     public AjaxResponse saveResource(ExSysResource exSysResource){
         String msg = sysService.saveResource(exSysResource);
-        return AjaxResponse.success();
+        return AjaxResponse.success(msg);
+    }
+
+    @PostMapping("updateResource")
+    public AjaxResponse updateResource(@RequestBody ArrayList<ExSysResource> exSysResources){
+        String msg = sysService.updateResource(exSysResources);
+        return AjaxResponse.success(msg);
     }
 }

@@ -55,6 +55,10 @@
         select menu.id,menu.title from ex_sys_menu menu , ex_sys_role_resource role where role.roleid = #{id,jdbcType=INTEGER} and menu.id = role.resourceid
     </select>
 
+    <select id="getResource" parameterType="Long" resultType="java.util.Map">
+        select menu.id,menu.name from ex_sys_resource menu , ex_sys_role_resource role where role.roleid = #{id,jdbcType=INTEGER} and menu.id = role.resourceid
+    </select>
+
     <update id="saveRoles" parameterType="java.util.List">
         <foreach collection="list" index="index" item="item" separator=";">
             update ex_sys_role

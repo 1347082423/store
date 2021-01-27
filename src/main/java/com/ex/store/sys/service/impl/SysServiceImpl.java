@@ -120,14 +120,22 @@ public class SysServiceImpl implements SysService {
     public PageAjaxResponse getAllPermissions(PageParameter<ExSysRole> pageParameter) {
         List<ExSysRole> list = permissionsMapper.findPermissionsListByPage(pageParameter);
         int count = permissionsMapper.findPermissionsCount(pageParameter);
-        final List<RoleAndResource> roleAndResources = new ArrayList<RoleAndResource>(list.size());
+        List<RoleAndResource> roleAndResources = new ArrayList<RoleAndResource>(list.size());
         list.stream().forEach(exSysRole -> {
             RoleAndResource roleAndResource = new RoleAndResource();
             BeanUtils.copyProperties(exSysRole, roleAndResource);
-            List<Map<String, Object>> permissionsMap = permissionsMapper.getPermissions(exSysRole.getId());
-            roleAndResource.setIds(CollectionUtils.ListMapToString(permissionsMap, "id"));
-            roleAndResource.setRoles(CollectionUtils.ListMapToString(permissionsMap, "title"));
-            roleAndResources.add(roleAndResource);
+            if (exSysRole.getType() == 1){
+                List<Map<String, Object>> permissionsMap = permissionsMapper.getPermissions(exSysRole.getId());
+                roleAndResource.setIds(CollectionUtils.ListMapToString(permissionsMap, "id"));
+                roleAndResource.setRoles(CollectionUtils.ListMapToString(permissionsMap, "title"));
+                roleAndResources.add(roleAndResource);
+            }else if (exSysRole.getType() == 2){
+                List<Map<String, Object>> permissionsMap = permissionsMapper.getResource(exSysRole.getId());
+                roleAndResource.setIds(CollectionUtils.ListMapToString(permissionsMap, "id"));
+                roleAndResource.setRoles(CollectionUtils.ListMapToString(permissionsMap, "name"));
+                roleAndResources.add(roleAndResource);
+            }
+
         });
         PageAjaxResponse pageAjaxResponse = PageAjaxResponse.success(roleAndResources, count);
         return pageAjaxResponse;
@@ -310,11 +318,27 @@ public class SysServiceImpl implements SysService {
     @Override
     public PageAjaxResponse findResourceByPageCondition(PageParameter<ExSysResource> pageParameter) {
         List<ExSysResource> list = resourceMapper.findResourceByCondition(pageParameter);
-        return PageAjaxResponse.success(list,list.size());
+        int count = resourceMapper.findCoyntByCondition(pageParameter);
+        return PageAjaxResponse.success(list,count);
     }
 
     @Override
     public String saveResource(ExSysResource exSysResource) {
-        return null;
+        String msg = "数据更新失败";
+        int count = resourceMapper.insertResource(exSysResource);
+        if (!LongUtils.longIsNull(exSysResource.getId())){
+            msg = "数据更新成功";
+        }
+        return msg;
+    }
+
+    @Override
+    public String updateResource(ArrayList<ExSysResource> exSysResources) {
+        String msg = "更新失败";
+        int count = resourceMapper.updateResourceByLit(exSysResources);
+        if (count > 0){
+            msg = "更新成功";
+        }
+        return msg;
     }
 }

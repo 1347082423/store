@@ -28,14 +28,15 @@ layui.define(["form", "table", "jqutil"], function (exports) {
         , page: true //开启分页
         , cols: [[ //表头
             {width: 80, checkbox: true}
-            , {field: 'id', title: 'ID', width: 80, sort: true}
+            , {field: 'id', title: 'ID', width: 40, sort: true}
             , {field: 'name', title: '资源名字', width: 200}
-            , {field: 'category', title: '类别', width: 100, sort: true, templet: '#category'}
+            , {field: 'category', title: '公开资源', width: 120, sort: true, templet: '#category'}
             , {field: 'url', title: '资源路径', width: 200}
             , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
-            , {field: 'model', title: '所属model', width: 120, sort: true}
-            , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#type'}
+            , {field: 'model', title: '所属model',hide:true, width: 120, sort: true}
+            , {field: 'type', title: '操作类型', width: 120, sort: true, templet: '#type'}
             , {field: 'pid', title: 'pid',hide:true, width: 100}
+            , {field: 'desc', title: 'desc', width: 200}
             , {field: 'active', title: '操作', width: 200, toolbar: '#table-content-list'}
         ]],
     });
@@ -46,11 +47,11 @@ layui.define(["form", "table", "jqutil"], function (exports) {
         var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
         if (layEvent === 'edit') { //编辑
             admin.popup({
-                title: '修改菜单'
+                title: '修改资源信息'
                 , area: ['735px', '650px']
                 , id: 'LAY-popup-content-add'
                 , success: function (layero, index) {
-                    view(this.id).render('sys/menu/addmenu',data).done(function () {
+                    view(this.id).render('sys/resource/addresource',data).done(function () {
                         //必须加  否则有些表单项加载不出来
                         form.render(null, 'layuiadmin-app-form-list');
                         //监听提交
@@ -63,9 +64,11 @@ layui.define(["form", "table", "jqutil"], function (exports) {
                             } else {
                                 field.isForbid = "2";
                             }
+                            var checkStatus = [];
+                            checkStatus.push(field)
                             jqutil.render({
-                                url: "/menu/saveMenu",
-                                params: field,
+                                url: "/resource/updateResource",
+                                params: checkStatus,
                                 type: "POST",
                                 success: function (d) {
                                     if (d.ok) {
@@ -75,7 +78,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
                                     }
                                 }
                             });
-                            jqutil.load();
+                            jqutil.loadByList();
                         });
                     });
                 }

@@ -40,4 +40,85 @@
         limit ${(page - 1) * limit} , #{limit}
     </select>
 
+    <select id="findCoyntByCondition" parameterType="com.ex.store.core.vo.PageParameter" resultType="INTEGER">
+        SELECT COUNT(1) from ex_sys_resource
+        <where>
+            1=1
+            <if test="parameter.name != null and parameter.name != ''">
+                and name LIKE concat('%',#{parameter.name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="parameter.category != null and parameter.category != ''">
+                and 'category' = #{parameter.category,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.url != null and parameter.url != ''">
+                and 'url' = #{parameter.url,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.desc != null and parameter.desc != ''">
+                and 'desc' = #{parameter.desc,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.isForbid != null and parameter.isForbid != ''">
+                and 'isForbid' = #{parameter.isForbid,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.model != null and parameter.model != ''">
+                and 'model' = #{parameter.model,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.type != null and parameter.type != ''">
+                and 'type' = #{parameter.type,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.sort != null and parameter.sort != ''">
+                and 'sort' = #{parameter.sort,jdbcType=VARCHAR}
+            </if>
+            <if test="parameter.icon != null and parameter.icon != ''">
+                and 'icon' = #{parameter.icon,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateResourceByLit" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE ex_sys_resource
+            <set>
+                <if test="item.name != null and item.name != ''">
+                    `name` = #{item.name,jdbcType=VARCHAR},
+                </if>
+                <if test="item.isForbid != null and item.isForbid != 0">
+                    `isForbid` = #{item.isForbid,jdbcType=INTEGER},
+                </if>
+                <if test="item.pid != null and item.pid != 0">
+                    `pid` = #{item.pid,jdbcType=INTEGER},
+                </if>
+                <if test="item.type != null and item.type != 0">
+                    `type` = #{item.type,jdbcType=INTEGER},
+                </if>
+                <if test="item.category != null and item.category != ''">
+                    `category` = #{item.category,jdbcType=CHAR},
+                </if>
+                <if test="item.model != null and item.model != ''">
+                    `model` = #{item.model,jdbcType=VARCHAR},
+                </if>
+                <if test="item.icon != null and item.icon != ''">
+                    `icon` = #{item.icon,jdbcType=VARCHAR},
+                </if>
+                <if test="item.sort != null and item.sort != 0">
+                    `sort` = #{item.sort,jdbcType=INTEGER},
+                </if>
+                <if test="item.url != null and item.url != ''">
+                    `url` = #{item.url,jdbcType=VARCHAR},
+                </if>
+                <if test="item.desc != null and item.desc != ''">
+                    `desc` = #{item.desc,jdbcType=VARCHAR},
+                </if>
+            </set>
+            WHERE id =#{item.id,jdbcType=INTEGER}
+        </foreach>
+    </update>
+
+
+    <insert id="insertResource" parameterType="com.ex.store.core.pojo.ExSysResource" keyProperty="id"
+            useGeneratedKeys="true">
+        INSERT INTO `ex_sys_resource`(`name`, `category`, `url`, `desc`, `isForbid`, `model`, `type`, `sort`, `icon`, `pid`) VALUES (
+        #{name,jdbcType=VARCHAR},#{category,jdbcType=VARCHAR},#{url,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},#{isForbid,jdbcType=VARCHAR},#{model,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{sort,jdbcType=VARCHAR},
+        #{icon,jdbcType=VARCHAR},#{pid,jdbcType=VARCHAR});
+    </insert>
+
 </mapper>

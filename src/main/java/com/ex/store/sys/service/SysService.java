@@ -51,4 +51,6 @@ public interface SysService {
     PageAjaxResponse findResourceByPageCondition(PageParameter<ExSysResource> pageParameter);
 
     String saveResource(ExSysResource exSysResource);
+
+    String updateResource(ArrayList<ExSysResource> exSysResources);
 }

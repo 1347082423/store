@@ -74,9 +74,9 @@
             <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
             <script type="text/html" id="category">
                 {{# if(d.category=='1'){ }}
-                系统资源
+                权限限制
                 {{# }else if (d.category=='2'){ }}
-                非系统资源
+                非权限限制
                 {{# }else{ }}
                 未定义
                 {{# } }}
@@ -92,9 +92,11 @@
             </script>
             <script type="text/html" id="type">
                 {{# if(d.type=='1'){ }}
-                内部打开
+                查询
                 {{# }else if (d.type=='2'){ }}
-                ifream
+                添加
+                {{# }else if (d.type=='3'){ }}
+                更新
                 {{# }else{ }}
                 未定义
                 {{# } }}

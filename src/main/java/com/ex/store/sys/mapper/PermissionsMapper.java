@@ -38,4 +38,6 @@ public interface PermissionsMapper {
     int updateUserAndRoleByUserId(List<ExSysUserRole> exSysUserRoles);
 
     int deletRoleUser(ExSysUserRole exSysUserRole);
+
+    List<Map<String, Object>> getResource(Long id);
 }

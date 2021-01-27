@@ -3,11 +3,14 @@ package com.ex.store.sys.controller;
 import com.ex.store.core.dto.RoleAndResource;
 import com.ex.store.core.dto.UserDto;
 import com.ex.store.core.exception.BusinessException;
+import com.ex.store.core.pojo.ExSysUser;
 import com.ex.store.core.vo.AjaxResponse;
 import com.ex.store.core.vo.PageAjaxResponse;
 import com.ex.store.core.vo.PageParameter;
 import com.ex.store.sys.service.SysService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -81,5 +84,14 @@ public class UserController {
             msg = e.getMessage();
         }
         return AjaxResponse.success(msg);
+    }
+
+    @RequestMapping("obtainBasciInfo")
+    public AjaxResponse obtainBasciInfo(){
+        ExSysUser newPrincipal = new ExSysUser();
+        ExSysUser principal = (ExSysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        BeanUtils.copyProperties(principal,newPrincipal);
+        newPrincipal.setAuthorities(null);
+        return AjaxResponse.success(newPrincipal);
     }
 }

@@ -11,11 +11,11 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label">菜单名称</label>
+            <label class="layui-form-label">资源名称</label>
             <div class="layui-input-inline">
                 <script type="text/html" template lay-done="layui.data.sendParams(d.params)">
-                    <input type="text" name="title" lay-verify="required" value="{{ d.params.title || '' }}"
-                           placeholder="请输入菜单名" autocomplete="off" class="layui-input">
+                    <input type="text" name="name" lay-verify="required" value="{{ d.params.name || '' }}"
+                           placeholder="请输入资源名" autocomplete="off" class="layui-input">
                 </script>
             </div>
         </div>
@@ -78,7 +78,7 @@
         <div class="layui-input-block">
             <script type="text/html" template>
                 <textarea name="desc" placeholder="请输入内容" class="layui-textarea"
-                          value="{{ d.params.desc || '' }}"></textarea>
+                          value="">{{ d.params.desc || '' }}</textarea>
             </script>
         </div>
     </div>
