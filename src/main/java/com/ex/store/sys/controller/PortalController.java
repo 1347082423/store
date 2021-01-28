@@ -2,6 +2,7 @@ package com.ex.store.sys.controller;
 
 import com.ex.store.core.dto.MenuDto;
 import com.ex.store.core.pojo.ExSysUser;
+import com.ex.store.core.util.CollectionUtils;
 import com.ex.store.core.vo.AjaxResponse;
 import com.ex.store.sys.service.SysService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +112,13 @@ public class PortalController {
     @RequestMapping("/obtainmenu")
     @ResponseBody
     public AjaxResponse obtainMenu() {
-        List<MenuDto> list = sysService.obtainMenu();
+        ExSysUser principal = (ExSysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<MenuDto> list = null;
+        if (CollectionUtils.isNull(principal.getMenus())){
+            list= sysService.obtainMenu();
+        }else{
+            list = principal.getMenus();
+        }
         return AjaxResponse.success(list);
     }
 

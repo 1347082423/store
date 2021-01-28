@@ -183,6 +183,7 @@ layui.define('tableSelect', function (exports) {
         {width: 80, checkbox: true}
         , {field: 'id', title: 'ID', width: 80, sort: true}
         , {field: 'title', title: '资源名称', width: 200, sort: true}
+        , {field: 'url', title: '跳转地址', width: 200, sort: true}
         , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
         , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#typeField'}
         , {field: 'category', title: '菜单类别', width: 120, sort: true, templet: '#category'}
@@ -191,6 +192,7 @@ layui.define('tableSelect', function (exports) {
         {width: 80, checkbox: true}
         , {field: 'id', title: 'ID', width: 80, sort: true}
         , {field: 'name', title: '资源名称', width: 200, sort: true}
+        , {field: 'url', title: '连接地址', width: 200, sort: true}
         , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
         , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#typeField'}
         , {field: 'category', title: '菜单类别', width: 120, sort: true, templet: '#category'}

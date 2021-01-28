@@ -1,10 +1,7 @@
 package com.ex.store.sys.service;
 
 import com.ex.store.core.dto.*;
-import com.ex.store.core.pojo.ExSysGroup;
-import com.ex.store.core.pojo.ExSysMenu;
-import com.ex.store.core.pojo.ExSysResource;
-import com.ex.store.core.pojo.ExSysRole;
+import com.ex.store.core.pojo.*;
 import com.ex.store.core.vo.AjaxResponse;
 import com.ex.store.core.vo.PageAjaxResponse;
 import com.ex.store.core.vo.PageParameter;

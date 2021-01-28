@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +52,7 @@ public class SysServiceImpl implements SysService {
     public List<MenuDto> obtainMenu() {
         //获取List
         List<ExSysMenu> list = menuMapper.findList();
-        final List<MenuDto> menus = new ArrayList<MenuDto>();
+        List<MenuDto> menus = new ArrayList<MenuDto>();
         list.stream().forEach(exSysMenu -> {
             menus.add(new MenuDto(exSysMenu.getTitle(), exSysMenu.getName(), exSysMenu.getIcon(), exSysMenu.getUrl(), exSysMenu.getId(), exSysMenu.getPid()));
         });

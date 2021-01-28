@@ -1,9 +1,11 @@
 package com.ex.store.core.pojo;
 
+import com.ex.store.core.dto.MenuDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 public class ExSysUser implements UserDetails {
 
@@ -17,6 +19,7 @@ public class ExSysUser implements UserDetails {
   private Collection<? extends GrantedAuthority> authorities;
   private boolean enabled;
   private Long isForbid;
+  private List<MenuDto> menus;
 
 
   @Override
@@ -116,5 +119,13 @@ public class ExSysUser implements UserDetails {
 
   public void setIsForbid(Long isForbid) {
     this.isForbid = isForbid;
+  }
+
+  public List<MenuDto> getMenus() {
+    return menus;
+  }
+
+  public void setMenus(List<MenuDto> menus) {
+    this.menus = menus;
   }
 }

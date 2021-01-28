@@ -1,6 +1,7 @@
 package com.ex.store.sys.mapper;
 
 import com.ex.store.core.pojo.ExSysMenu;
+import com.ex.store.core.pojo.ExSysUser;
 import com.ex.store.core.vo.PageParameter;
 import org.apache.ibatis.annotations.Mapper;
 

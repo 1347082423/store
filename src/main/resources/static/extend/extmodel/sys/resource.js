@@ -28,7 +28,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
         , page: true //开启分页
         , cols: [[ //表头
             {width: 80, checkbox: true}
-            , {field: 'id', title: 'ID', width: 40, sort: true}
+            , {field: 'id', title: 'ID', width: 100, sort: true}
             , {field: 'name', title: '资源名字', width: 200}
             , {field: 'category', title: '公开资源', width: 120, sort: true, templet: '#category'}
             , {field: 'url', title: '资源路径', width: 200}

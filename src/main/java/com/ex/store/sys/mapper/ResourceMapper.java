@@ -22,4 +22,6 @@ public interface ResourceMapper {
     int findCoyntByCondition(PageParameter<ExSysResource> pageParameter);
 
     int updateResourceByLit(ArrayList<ExSysResource> exSysResources);
+
+    List<ExSysResource> findListByCondition(ExSysResource exSysResource);
 }

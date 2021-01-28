@@ -1,5 +1,6 @@
 package com.ex.store.core.config.access;
 
+import com.ex.store.core.pojo.ExSysResource;
 import com.ex.store.core.pojo.ExSysUser;
 import com.ex.store.core.util.CollectionUtils;
 import org.springframework.security.core.Authentication;
@@ -22,25 +23,19 @@ import java.util.List;
 @Component
 public class SecurityAuthorityAccess {
 
-    private List<String> skipUrls = new ArrayList<String>();
+    private List<ExSysResource> skipUrls = new ArrayList<ExSysResource>();
 
 
     public boolean hasPermit(HttpServletRequest request, Authentication authentication) {
         //定义不在权限范围中但是能够直接通过的路径，如果有返回false，无返回true
-        skipUrls.add("/delete");
-        skipUrls.add("/hello");
-        skipUrls.add("/failure");
-        skipUrls.add("/index");
-        skipUrls.add("/obtainmenu");
-        skipUrls.add("/favicon.ico");
+
         if (!CollectionUtils.isNull(skipUrls)) {
-            for (String skipUrl : skipUrls) {
-                AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(skipUrl);
+            for (ExSysResource skipUrl : skipUrls) {
+                AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(skipUrl.getUrl());
                 if (antPathRequestMatcher.matches(request)) {
                     return true;
                 }
             }
-
         }
         Object principal = authentication.getPrincipal();
         ExSysUser exSysUser = null;
@@ -54,4 +49,11 @@ public class SecurityAuthorityAccess {
         return false;
     }
 
+    public List<ExSysResource> getSkipUrls() {
+        return skipUrls;
+    }
+
+    public void setSkipUrls(List<ExSysResource> skipUrls) {
+        this.skipUrls = skipUrls;
+    }
 }
