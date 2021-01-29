@@ -1,5 +1,7 @@
 package com.ex.store.core.util;
 
+import com.ex.store.core.cache.DictionaryCache;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +12,10 @@ import java.util.Map;
  * @Desc
  **/
 public class DictionaryUtils {
-    public static final List<Map<String,Object>> dictionarycache = new ArrayList<Map<String,Object>>();
 
-//    public static
+    public static void loadDictionary(){
+
+//        DictionaryCache.DICTIONARY_CACHE.putAll();
+    }
 
 }

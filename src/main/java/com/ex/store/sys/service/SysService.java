@@ -50,4 +50,12 @@ public interface SysService {
     String saveResource(ExSysResource exSysResource);
 
     String updateResource(ArrayList<ExSysResource> exSysResources);
+
+    List<DictionaryDto> findDictionaryByCondition(DictionaryDto dictionaryDto);
+
+    AjaxResponse updateDictionary(ArrayList<DictionaryDto> exSysDictionaries);
+
+    String insertDictionary(DictionaryDto exSysGroup);
+
+    List<DictionaryDto> getChilds(DictionaryDto dictionaryDto);
 }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ex.store.sys.mapper.DictionaryMapper">
+
+    <select id="findDictionaryByCondition" resultType="com.ex.store.core.dto.DictionaryDto" parameterType="com.ex.store.core.dto.DictionaryDto">
+        select `dic_id` as dicId, `dic_key` dicKey, `dic_value` dicValue, `dic_parentid` dicParentid, `dic_create_time` dicCreateTime, `dic_update_time` dicUpdateTime, `dic_category` dicCategory,
+        `dic_is_stair` dicIsStair, `dic_sort` dicSort, `dic_desc` dicDesc, `dic_forbid` dicForbid from `ex_sys_dictionary`
+        <where>
+            1=1
+            <if test="dicId != null and dicId != ''">
+                and dic_id = #{dicId,jdbcType=INTEGER}
+            </if>
+            <if test="dicKey != null and dicKey != ''">
+                and dic_key = #{dicKey,jdbcType=VARCHAR}
+            </if>
+            <if test="dicValue != null and dicValue != ''">
+                and dic_value = #{dicValue,jdbcType=VARCHAR}
+            </if>
+            <if test="dicParentid != null and dicParentid != ''">
+                and dic_parentid = #{dicParentid,jdbcType=INTEGER}
+            </if>
+
+            <if test="dicCategory != null and dicCategory != ''">
+                and dic_category = #{dicCategory,jdbcType=VARCHAR}
+            </if>
+            <if test="dicIsStair != null and dicIsStair != ''">
+                and dic_is_stair = #{dicIsStair,jdbcType=VARCHAR}
+            </if>
+            <if test="dicSort != null and dicSort != ''">
+                and dic_sort = #{dicSort,jdbcType=VARCHAR}
+            </if>
+            <if test="dicDesc != null and dicDesc != ''">
+                and dic_desc = #{dicDesc,jdbcType=VARCHAR}
+            </if>
+            <if test="dicForbid != null and dicForbid != ''">
+                and dic_forbid = #{dicForbid,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertDictonary" parameterType="java.util.List" keyProperty="dic_id" useGeneratedKeys="true">
+        INSERT INTO `ex_sys_dictionary`(`dic_key`, `dic_value`, `dic_parentid`, `dic_create_time`,
+        `dic_update_time`, `dic_category`, `dic_is_stair`, `dic_sort`, `dic_desc`, `dic_forbid`) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{dicKey,jdbcType=VARCHAR},#{dicValue,jdbcType=VARCHAR},#{dicParentid,jdbcType=INTEGER},#{dicCreateTime,jdbcType=TIMESTAMP},#{dicUpdateTime,jdbcType=TIMESTAMP},#{dicCategory,jdbcType=VARCHAR},
+            #{dicIsStair,jdbcType=VARCHAR},#{dicSort,jdbcType=VARCHAR},#{dicDesc,jdbcType=VARCHAR},#{dicForbid,jdbcType=INTEGER},)
+        </foreach>
+    </insert>
+
+    <update id="updateDictonary" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+            UPDATE `ex_sys_dictionary`
+            <set>
+                <if test="item.dicKey != null and item.dicKey != ''">
+                    dic_key = #{item.dicKey,jdbcType=VARCHAR}
+                </if>
+                <if test="item.dicValue != null and item.dicValue != ''">
+                    dic_value = #{item.dicValue,jdbcType=VARCHAR}
+                </if>
+                <if test="item.dicParentid != null and item.dicParentid != ''">
+                    dic_parentid = #{item.dicParentid,jdbcType=INTEGER}
+                </if>
+                <if test="item.dicCreateTime != null and item.dicCreateTime != ''">
+                    dic_create_time = #{item.dicCreateTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="item.dicUpdateTime != null and item.dicUpdateTime != ''">
+                    dic_update_time = #{item.dicUpdateTime,jdbcType=TIMESTAMP}
+                </if>
+                <if test="item.dicCategory != null and item.dicCategory != ''">
+                    dic_category = #{item.dicCategory,jdbcType=VARCHAR}
+                </if>
+                <if test="item.dicIsStair != null and item.dicIsStair != ''">
+                    dic_is_stair = #{item.dicIsStair,jdbcType=VARCHAR}
+                </if>
+                <if test="item.dicSort != null and item.dicSort != ''">
+                    dic_sort = #{item.dicSort,jdbcType=VARCHAR}
+                </if>
+                <if test="item.dicDesc != null and item.dicDesc != ''">
+                    dic_desc = #{item.dicDesc,jdbcType=VARCHAR}
+                </if>
+                <if test="item.dicForbid != null and item.dicForbid != ''">
+                    dic_forbid = #{item.dicForbid,jdbcType=INTEGER}
+                </if>
+            </set>
+            WHERE dic_id =#{item.dicId,jdbcType=INTEGER}
+        </foreach>
+    </update>
+
+    <delete id="delDictonary" parameterType="com.ex.store.core.pojo.ExSysDictionary">
+        delete ex_sys_dictionary where dic_parentid = #{dicParentid,jdbcType=INTEGER}
+    </delete>
+</mapper>

@@ -47,6 +47,9 @@ public class SysServiceImpl implements SysService {
     @Autowired
     private GroupMapper groupMapper;
 
+    @Autowired
+    private DictionaryMapper dictionaryMapper;
+
 
     @Override
     public List<MenuDto> obtainMenu() {
@@ -339,5 +342,84 @@ public class SysServiceImpl implements SysService {
             msg = "更新成功";
         }
         return msg;
+    }
+
+    @Override
+    public List<DictionaryDto> findDictionaryByCondition(DictionaryDto dictionaryDto) {
+        List<DictionaryDto> list = dictionaryMapper.findDictionaryByCondition(dictionaryDto);
+        return list;
+    }
+
+    @Override
+    @Transactional
+    public AjaxResponse updateDictionary(ArrayList<DictionaryDto> dictionaryDtos) {
+        AjaxResponse ajaxResponse = AjaxResponse.success("数据更新成功");
+        List<ExSysDictionary> mainList = new ArrayList<ExSysDictionary>();
+        dictionaryDtos.stream().forEach(item->{
+            ExSysDictionary dictionary = new ExSysDictionary();
+            BeanUtils.copyProperties(item,dictionary);
+            mainList.add(dictionary);
+        });
+        if (mainList.size() > 0){
+            int count = dictionaryMapper.updateDictonary(mainList);
+            if (count != mainList.size()){
+                ajaxResponse.setMsg("数据更新失败");
+                return ajaxResponse;
+            }
+        }
+        List<DictionaryDto> childList = new ArrayList<DictionaryDto>();
+        dictionaryDtos.stream().forEach(item->{
+            int count = dictionaryMapper.delDictonary(item);
+            childList.addAll(item.getChilds());
+        });
+        List<ExSysDictionary> list = new ArrayList<ExSysDictionary>();
+        childList.stream().forEach(item->{
+            ExSysDictionary dictionary = new ExSysDictionary();
+            BeanUtils.copyProperties(item,dictionary);
+            list.add(dictionary);
+        });
+        if (list.size() > 0){
+            int count = dictionaryMapper.insertDictonary(list);
+            if (count != list.size()){
+                ajaxResponse.setMsg("数据更新失败");
+                return ajaxResponse;
+            }
+        }
+        return ajaxResponse;
+    }
+
+    @Override
+    @Transactional
+    public String insertDictionary(DictionaryDto dictionaryDto) {
+        String msg = "数据更新成功";
+        ExSysDictionary exSysDictionary = new ExSysDictionary();
+        BeanUtils.copyProperties(dictionaryDto,exSysDictionary);
+        List<ExSysDictionary> list = new ArrayList<ExSysDictionary>(1);
+        list.add(exSysDictionary);
+        int count = dictionaryMapper.insertDictonary(list);
+        if (count != list.size()){
+            return "数据更新失败";
+        }
+        List<DictionaryDto> childs = dictionaryDto.getChilds();
+        List<ExSysDictionary> childList = new ArrayList<ExSysDictionary>();
+        childs.stream().forEach(item->{
+            ExSysDictionary dictionary = new ExSysDictionary();
+            BeanUtils.copyProperties(item,dictionary);
+            dictionary.setDicParentid(list.get(0).getDicId());
+            childList.add(dictionary);
+        });
+        if (childList.size() > 0){
+            int childCount = dictionaryMapper.insertDictonary(childList);
+            if (childCount != childList.size()){
+                msg = "数据更新失败";
+            }
+        }
+        return msg;
+    }
+
+    @Override
+    public List<DictionaryDto> getChilds(DictionaryDto dictionaryDto) {
+        List<DictionaryDto> dictionaryByCondition = dictionaryMapper.findDictionaryByCondition(dictionaryDto);
+        return dictionaryByCondition;
     }
 }

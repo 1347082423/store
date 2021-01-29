@@ -1,0 +1,114 @@
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list"
+     style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">字典key</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template lay-done="layui.data.sendParams(d.params)">
+                    <input type="text" name="name" lay-verify="required" value="{{ d.params.name || '' }}"
+                           placeholder="请输入" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">字典Value</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="text" name="name" lay-verify="required" value="{{ d.params.name || '' }}"
+                           placeholder="请输入" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">字典类别</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <select name="type">
+                        <option value="0">请选择</option>
+                        <option value="1" {{ d.params.type== 1 ?
+                        'selected' : '' }}>系统字典</option>
+                        <option value="2" {{ d.params.type== 2 ?
+                        'selected' : '' }}>业务字典</option>
+                    </select>
+                </script>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">菜单级别</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <select name="type">
+                        <option value="0">请选择</option>
+                        <option value="1" {{ d.params.type== 1 ?
+                        'selected' : '' }}>第一级</option>
+                        <option value="2" {{ d.params.type== 2 ?
+                        'selected' : '' }}>第二级</option>
+                        <option value="2" {{ d.params.type== 2 ?
+                        'selected' : '' }}>第三级</option>
+                    </select>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">是否禁用</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="checkbox" lay-filter="isForbid" name="isForbid" lay-skin="switch"
+                           lay-text="未禁用|禁用" {{ d.params.isForbid== 1 ?
+                    'checked' : ''}}>
+                </script>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template>
+                    <input type="text" name="sort" placeholder="请输入内容" class="layui-input"
+                           value="{{ d.params.sort || '0' }}">
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">字典描述</label>
+        <div class="layui-input-block">
+            <script type="text/html" template>
+                <textarea name="groupfunction" placeholder="请输入内容" class="layui-textarea"
+                          value="">{{ d.params.groupfunction || '' }}</textarea>
+            </script>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <span>添加字典属性</span>
+    </div>
+    <div class="layui-form-item">
+        <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
+        <script type="text/html" id="toolbarDemo">
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+            <button class="layui-btn layui-btn-sm" lay-event="del">删除</button>
+        </script>
+    </div>
+    <script type="text/html" template>
+        <input type="hidden" name="id" value="{{ d.params.id || '0' }}">
+    </script>
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-inline">
+            <input type="button" lay-submit lay-filter="layuiadmin-app-form-submit" value="确认" class="layui-btn">
+        </div>
+    </div>
+</div>
+<script type="text/html" id="isForbid">
+    <input type="checkbox" lay-filter="dicForbid" name="dicForbid" lay-skin="switch"
+           lay-text="未禁用|禁用" {{ d.dicForbid == 1 ?
+    'checked' : ''}}>
+</script>
+<script>
+    layui.use('adddictionary', layui.factory('adddictionary'))
+</script>
