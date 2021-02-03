@@ -306,7 +306,7 @@ layui.define(['jquery', 'jqutil'], function (exports) {
      */
     tree.prototype.checkStatus = function (e, index) {
         var checked = {};
-        var data = [], innerData = e.innerData_;
+        var data = [], innerData = e.innerData_.slice(0);
         if (index == undefined) {
             index = 0;
         }

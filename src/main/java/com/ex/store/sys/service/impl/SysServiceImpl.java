@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -358,7 +359,9 @@ public class SysServiceImpl implements SysService {
         dictionaryDtos.stream().forEach(item->{
             ExSysDictionary dictionary = new ExSysDictionary();
             BeanUtils.copyProperties(item,dictionary);
+            dictionary.setDicUpdateTime(new Date());
             mainList.add(dictionary);
+
         });
         if (mainList.size() > 0){
             int count = dictionaryMapper.updateDictonary(mainList);
@@ -366,16 +369,29 @@ public class SysServiceImpl implements SysService {
                 ajaxResponse.setMsg("数据更新失败");
                 return ajaxResponse;
             }
+            /**
+             * 1、删除多个（）删除
+             * 2、单个删除
+             * 3、更新
+             */
+        }
+        //不需要删除子
+        if (dictionaryDtos.size() > 1 || dictionaryDtos.get(0) == null || CollectionUtils.isNull(dictionaryDtos.get(0).getChilds())){
+            return ajaxResponse;
         }
         List<DictionaryDto> childList = new ArrayList<DictionaryDto>();
         dictionaryDtos.stream().forEach(item->{
             int count = dictionaryMapper.delDictonary(item);
-            childList.addAll(item.getChilds());
+            if (CollectionUtils.isNotNull(item.getChilds())){
+                childList.addAll(item.getChilds());
+            }
         });
         List<ExSysDictionary> list = new ArrayList<ExSysDictionary>();
         childList.stream().forEach(item->{
             ExSysDictionary dictionary = new ExSysDictionary();
             BeanUtils.copyProperties(item,dictionary);
+            dictionary.setDicCreateTime(new Date());
+            dictionary.setDicParentid(dictionaryDtos.get(0).getDicId());
             list.add(dictionary);
         });
         if (list.size() > 0){
@@ -395,6 +411,7 @@ public class SysServiceImpl implements SysService {
         ExSysDictionary exSysDictionary = new ExSysDictionary();
         BeanUtils.copyProperties(dictionaryDto,exSysDictionary);
         List<ExSysDictionary> list = new ArrayList<ExSysDictionary>(1);
+        exSysDictionary.setDicCreateTime(new Date());
         list.add(exSysDictionary);
         int count = dictionaryMapper.insertDictonary(list);
         if (count != list.size()){
@@ -406,6 +423,7 @@ public class SysServiceImpl implements SysService {
             ExSysDictionary dictionary = new ExSysDictionary();
             BeanUtils.copyProperties(item,dictionary);
             dictionary.setDicParentid(list.get(0).getDicId());
+            dictionary.setDicCreateTime(new Date());
             childList.add(dictionary);
         });
         if (childList.size() > 0){

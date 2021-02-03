@@ -1,8 +1,8 @@
 //dictionary
-layui.define(["form", "table", "jqutil", "treeTable"], function (exports) {
+layui.define(["form", "table", "jqutil", "treeTable","basicUtil"], function (exports) {
 
     var treeTable = layui.treeTable, form = layui.form, jqutil = layui.jqutil, $ = layui.$, admin = layui.admin,
-        view = layui.view;
+        view = layui.view,table = layui.table,util = layui.basicUtil;
     // 直接下载后url: './data/table-tree.json',这个配置可能看不到数据，改为data:[],获取自己的实际链接返回json数组
     var re = treeTable.render({
         elem: '#tree-table',
@@ -16,20 +16,9 @@ layui.define(["form", "table", "jqutil", "treeTable"], function (exports) {
         end: function (e) {
             form.render();
         },
-        cols: [
-            {
-                key: 'dicValue',
-                title: '名称',
-            },
-            {
-                key: 'dicKey',
-                title: '字典key',
-                align: 'center'
-            },
-            {
-                title: '类别',
-                align: 'center',
-                template: function (item) {
+        cols: [{key: 'dicValue', title: '名称',},
+            {key: 'dicKey', title: '字典key', align: 'center'},
+            {title: '类别', align: 'center', template: function (item) {
                     var value = "未定义";
                     if (item.dicCategory == 1) {
                         value = "系统字典";
@@ -39,22 +28,10 @@ layui.define(["form", "table", "jqutil", "treeTable"], function (exports) {
                     return '<p>' + value + '</p>';
                 }
             },
-            {
-                title: '序号',
-                key: 'dicSort',
-            },
-            {
-                title: '禁用',
-                align: 'center',
-                template: 'dicForbid',
-                key: 'dicForbid',
-            },
-            {
-                title: '操作',
-                align: 'left',
-                width: '200px',
-                template: "table-content-list",
-            }
+            {title: '序号', key: 'dicSort',},
+            {title: '子节点', align: 'center', template: 'dicLeaf', key: 'dicLeaf'},
+            {title: '禁用', align: 'center', template: 'dicForbid', key: 'dicForbid'},
+            {title: '操作', align: 'left', width: '200px', template: "table-content-list"}
         ]
     });
     //监听搜索
@@ -86,7 +63,7 @@ layui.define(["form", "table", "jqutil", "treeTable"], function (exports) {
             layer.confirm('确定删除吗？', function (index) {
                 //执行 Ajax 后重载
                 for (var i = 0; i < checkData.length; i++) {
-                    checkData[i].isForbid = 2;
+                    checkData[i].dicForbid = 2;
                 }
                 jqutil.render({
                     url: "/dictionary/updateDictionary",
@@ -116,16 +93,29 @@ layui.define(["form", "table", "jqutil", "treeTable"], function (exports) {
                         //监听提交
                         form.on('submit(layuiadmin-app-form-submit)', function (data) {
                             var field = data.field; //获取提交的字段
+                            //获取节点子分类
+                            //LAY-app-content-list
+                            var oldData = table.cache["LAY-app-content-list"];
+                            oldData = util.removeItemByList(oldData,"LAY_TABLE_INDEX");
+                            util.andItemByList(oldData,"dicCategory",field.dicCategory);
+                            util.andItemByList(oldData,"dicIsStair",parseInt(field.dicIsStair) + 1);
+                            util.andItemByList(oldData,"dicDesc",field.dicDesc);
+                            util.andItemByList(oldData,"dicLeaf",field.dicLeaf);
                             //提交 Ajax 成功后，关闭当前弹层并重载表格
                             //400请求参数出错
-                            if (field.isForbid == "on") {
-                                field.isForbid = "1";
+                            if (field.dicForbid == "on") {
+                                field.dicForbid = "1";
                             } else {
-                                field.isForbid = "2";
+                                field.dicForbid = "2";
                             }
+                            field.dicLeaf = "1";
+                            util.andItemByList(oldData,"dicForbid",field.dicForbid);
+                            field.childs = oldData;
+                            var data1 = [];
+                            data1.push(field);
                             jqutil.render({
                                 url: "/dictionary/insertDictionary",
-                                params: field,
+                                params: data1,
                                 type: "POST",
                                 success: function (d) {
                                     if (d.ok) {
@@ -135,8 +125,7 @@ layui.define(["form", "table", "jqutil", "treeTable"], function (exports) {
                                     }
                                 }
                             });
-                            jqutil.load();
-
+                            jqutil.loadByList();
                         });
                     });
                 }
@@ -144,6 +133,130 @@ layui.define(["form", "table", "jqutil", "treeTable"], function (exports) {
         }
     };
 
+    treeTable.on('tree(add)',function(obj){
+        var data = {};
+        data.dicParentid = obj.item.dicId;
+        admin.popup({
+            title: '添加字典信息'
+            , area: ['735px', '650px']
+            , id: 'LAY-popup-content-add'
+            , success: function (layero, index) {
+                view(this.id).render('sys/dictionary/adddictionary', data).done(function () {
+                    //必须加  否则有些表单项加载不出来
+                    form.render(null, 'layuiadmin-app-form-list');
+                    //监听提交
+                    form.on('submit(layuiadmin-app-form-submit)', function (data) {
+                        var field = data.field; //获取提交的字段
+                        //提交 Ajax 成功后，关闭当前弹层并重载表格
+                        //400请求参数出错
+                        if(field.dicForbid == "on") {
+                            field.dicForbid = "1";
+                        } else {
+                            field.dicForbid = "2";
+                        }
+                        var oldData = table.cache["LAY-app-content-list"];
+                        oldData = util.removeItemByList(oldData,"LAY_TABLE_INDEX");
+                        util.andItemByList(oldData,"dicCategory",field.dicCategory);
+                        util.andItemByList(oldData,"dicIsStair",parseInt(field.dicIsStair) + 1);
+                        util.andItemByList(oldData,"dicDesc",field.dicDesc);
+                        util.andItemByList(oldData,"dicLeaf",field.dicLeaf);
+                        util.andItemByList(oldData,"dicForbid",field.dicForbid);
+                        field.dicLeaf = "1";
+                        field.childs = oldData;
+                        var data1 = [];
+                        data1.push(field);
+                        jqutil.render({
+                            url: "/dictionary/insertDictionary",
+                            params: data1,
+                            type: "POST",
+                            success: function (d) {
+                                if (d.ok) {
+                                    layer.msg(d.msg);
+                                    treeTable.reload(re); //重载表格
+                                    layer.close(index);
+                                }
+                            }
+                        });
+                        jqutil.loadByList();
+                    });
+                });
+            }
+        });
+    });
+    treeTable.on('tree(edit)',function(obj){
+        var data = obj.item;
+        admin.popup({
+            title: '修改字典信息'
+            , area: ['735px', '650px']
+            , id: 'LAY-popup-content-add'
+            , success: function (layero, index) {
+                view(this.id).render('sys/dictionary/adddictionary', data).done(function () {
+                    //必须加  否则有些表单项加载不出来
+                    form.render(null, 'layuiadmin-app-form-list');
+                    //监听提交
+                    form.on('submit(layuiadmin-app-form-submit)', function (data) {
+                        var field = data.field; //获取提交的字段
+                        //提交 Ajax 成功后，关闭当前弹层并重载表格
+                        //400请求参数出错
+                        if(field.dicForbid == "on") {
+                            field.dicForbid = "1";
+                        } else {
+                            field.dicForbid = "2";
+                        }
+                        if (field.dicLeaf != "2") {
+                            var oldData = table.cache["LAY-app-content-list"];
+                            oldData = util.removeItemByList(oldData,"LAY_TABLE_INDEX");
+                            util.andItemByList(oldData,"dicCategory",field.dicCategory);
+                            util.andItemByList(oldData,"dicIsStair",parseInt(field.dicIsStair) + 1);
+                            util.andItemByList(oldData,"dicDesc",field.dicDesc);
+                            util.andItemByList(oldData,"dicLeaf",field.dicLeaf);
+                            util.andItemByList(oldData,"dicForbid",field.dicForbid);
+                            field.dicLeaf = "1";
+                            field.childs = oldData;
+                        }
+                        var checkStatus = [];
+                        checkStatus.push(field)
+                        jqutil.render({
+                            url: "/dictionary/updateDictionary",
+                            params: checkStatus,
+                            type: "POST",
+                            success: function (d) {
+                                if (d.ok) {
+                                    layer.msg(d.msg);
+                                    treeTable.reload(re); //重载表格
+                                    layer.close(index);
+                                }
+                            }
+                        });
+                        jqutil.loadByList();
+                    });
+                });
+            }
+        });
+    });
+
+    treeTable.on('tree(del)',function(obj){
+        var data = obj.item; //获得当前行数据
+        var checkStatus = [];
+        data.dicForbid = 2;
+        checkStatus.push(data)
+        layer.confirm('确定删除吗?', function (index) {
+            jqutil.render({
+                url: "/dictionary/updateDictionary",
+                params: checkStatus,
+                type: "POST",
+                success: function (d,index) {
+                    if (d.ok) {
+                        layer.msg(d.msg);
+                        treeTable.reload(re); //重载表格
+                        layer.close(index);
+                    }
+                }
+            });
+            jqutil.loadByList();
+
+        });
+    });
 
     exports("dictionary", {})
 });
@@ -151,6 +264,7 @@ layui.define(["form", "table", "jqutil", "treeTable"], function (exports) {
 
 layui.define(['treeSelect', 'form', 'table'], function (exports) {
     var table = layui.table, form = layui.form;
+    form.render(null, 'layuiadmin-app-form-list');
     //头工具栏事件
     table.on('toolbar(LAY-app-content-list)', function (obj) {
         switch (obj.event) {
@@ -178,14 +292,34 @@ layui.define(['treeSelect', 'form', 'table'], function (exports) {
     });
 
     layui.data.sendParams = function (params) {
+        if (params.dicLeaf == "2"){
+            return;
+        }
         var where = {};
-        if (params.dicParentid == null){
+        if (params.dicParentid == null || params.dicId == null){
             where.dicParentid = -1;
         }else{
-            where.dicParentid = params.dicParentid;
+            where.dicParentid = params.dicId;
         }
         loadTable(where);
-    }
+    };
+
+
+    // table.on('tool(LAY-app-content-list)', function(obj){
+    //     // 1开  2关
+    //     var number = [1,2];
+    //     var data = obj.data;
+    //     if(obj.event === 'setSign'){
+    //         if (data.dicForbid == undefined || data.dicForbid == 1) {
+    //             data.dicForbid = 1;
+    //         }else {
+    //             data.dicForbid = 0;
+    //         }
+    //         obj.update({
+    //             dicForbid: number[data.dicForbid]
+    //         });
+    //     }
+    // });
 
     function loadTable(where){
         table.render({
@@ -201,7 +335,7 @@ layui.define(['treeSelect', 'form', 'table'], function (exports) {
                 , {field: 'dicKey', title: '字典key', width: 120, edit: 'text'}
                 , {field: 'dicValue', title: '字典value', width: 150, edit: 'text'}
                 , {field: 'dicSort', title: '排序', width: 80, edit: 'text'}
-                , {field: 'dicForbid', title: '是否禁用', width: 150, templet: "#isForbid"}
+                // , {field: 'dicForbid', title: '是否禁用',event: 'setSign', width: 150, templet: "#isForbid"}
             ]]
         });
     }

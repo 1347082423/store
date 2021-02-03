@@ -4,7 +4,7 @@
 
     <select id="findDictionaryByCondition" resultType="com.ex.store.core.dto.DictionaryDto" parameterType="com.ex.store.core.dto.DictionaryDto">
         select `dic_id` as dicId, `dic_key` dicKey, `dic_value` dicValue, `dic_parentid` dicParentid, `dic_create_time` dicCreateTime, `dic_update_time` dicUpdateTime, `dic_category` dicCategory,
-        `dic_is_stair` dicIsStair, `dic_sort` dicSort, `dic_desc` dicDesc, `dic_forbid` dicForbid from `ex_sys_dictionary`
+        `dic_is_stair` dicIsStair, `dic_sort` dicSort, `dic_desc` dicDesc, `dic_forbid` dicForbid,`dic_leaf` dicLeaf from `ex_sys_dictionary`
         <where>
             1=1
             <if test="dicId != null and dicId != ''">
@@ -35,15 +35,19 @@
             <if test="dicForbid != null and dicForbid != ''">
                 and dic_forbid = #{dicForbid,jdbcType=INTEGER}
             </if>
+            <if test="dicLeaf != null and dicLeaf != ''">
+                and dic_leaf = #{dicLeaf,jdbcType=INTEGER}
+            </if>
         </where>
+        order by dic_sort asc
     </select>
 
-    <insert id="insertDictonary" parameterType="java.util.List" keyProperty="dic_id" useGeneratedKeys="true">
+    <insert id="insertDictonary" parameterType="java.util.List" keyProperty="dicId" useGeneratedKeys="true">
         INSERT INTO `ex_sys_dictionary`(`dic_key`, `dic_value`, `dic_parentid`, `dic_create_time`,
-        `dic_update_time`, `dic_category`, `dic_is_stair`, `dic_sort`, `dic_desc`, `dic_forbid`) VALUES
+        `dic_update_time`, `dic_category`, `dic_is_stair`, `dic_sort`, `dic_desc`, `dic_forbid`,`dic_leaf`) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{dicKey,jdbcType=VARCHAR},#{dicValue,jdbcType=VARCHAR},#{dicParentid,jdbcType=INTEGER},#{dicCreateTime,jdbcType=TIMESTAMP},#{dicUpdateTime,jdbcType=TIMESTAMP},#{dicCategory,jdbcType=VARCHAR},
-            #{dicIsStair,jdbcType=VARCHAR},#{dicSort,jdbcType=VARCHAR},#{dicDesc,jdbcType=VARCHAR},#{dicForbid,jdbcType=INTEGER},)
+            (#{item.dicKey,jdbcType=VARCHAR},#{item.dicValue,jdbcType=VARCHAR},#{item.dicParentid,jdbcType=INTEGER},#{item.dicCreateTime,jdbcType=TIMESTAMP},#{item.dicUpdateTime,jdbcType=TIMESTAMP},#{item.dicCategory,jdbcType=VARCHAR},
+            #{item.dicIsStair,jdbcType=VARCHAR},#{item.dicSort,jdbcType=VARCHAR},#{item.dicDesc,jdbcType=VARCHAR},#{item.dicForbid,jdbcType=INTEGER},#{item.dicLeaf,jdbcType=INTEGER})
         </foreach>
     </insert>
 
@@ -52,34 +56,37 @@
             UPDATE `ex_sys_dictionary`
             <set>
                 <if test="item.dicKey != null and item.dicKey != ''">
-                    dic_key = #{item.dicKey,jdbcType=VARCHAR}
+                    dic_key = #{item.dicKey,jdbcType=VARCHAR},
                 </if>
                 <if test="item.dicValue != null and item.dicValue != ''">
-                    dic_value = #{item.dicValue,jdbcType=VARCHAR}
+                    dic_value = #{item.dicValue,jdbcType=VARCHAR},
                 </if>
                 <if test="item.dicParentid != null and item.dicParentid != ''">
-                    dic_parentid = #{item.dicParentid,jdbcType=INTEGER}
+                    dic_parentid = #{item.dicParentid,jdbcType=INTEGER},
                 </if>
-                <if test="item.dicCreateTime != null and item.dicCreateTime != ''">
-                    dic_create_time = #{item.dicCreateTime,jdbcType=TIMESTAMP}
+                <if test="item.dicCreateTime != null">
+                    dic_create_time = #{item.dicCreateTime,jdbcType=TIMESTAMP},
                 </if>
-                <if test="item.dicUpdateTime != null and item.dicUpdateTime != ''">
-                    dic_update_time = #{item.dicUpdateTime,jdbcType=TIMESTAMP}
+                <if test="item.dicUpdateTime != null">
+                    dic_update_time = #{item.dicUpdateTime,jdbcType=TIMESTAMP},
                 </if>
                 <if test="item.dicCategory != null and item.dicCategory != ''">
-                    dic_category = #{item.dicCategory,jdbcType=VARCHAR}
+                    dic_category = #{item.dicCategory,jdbcType=VARCHAR},
                 </if>
                 <if test="item.dicIsStair != null and item.dicIsStair != ''">
-                    dic_is_stair = #{item.dicIsStair,jdbcType=VARCHAR}
+                    dic_is_stair = #{item.dicIsStair,jdbcType=VARCHAR},
                 </if>
                 <if test="item.dicSort != null and item.dicSort != ''">
-                    dic_sort = #{item.dicSort,jdbcType=VARCHAR}
+                    dic_sort = #{item.dicSort,jdbcType=VARCHAR},
                 </if>
                 <if test="item.dicDesc != null and item.dicDesc != ''">
-                    dic_desc = #{item.dicDesc,jdbcType=VARCHAR}
+                    dic_desc = #{item.dicDesc,jdbcType=VARCHAR},
                 </if>
                 <if test="item.dicForbid != null and item.dicForbid != ''">
-                    dic_forbid = #{item.dicForbid,jdbcType=INTEGER}
+                    dic_forbid = #{item.dicForbid,jdbcType=INTEGER},
+                </if>
+                <if test="item.dicForbid != null and item.dicForbid != ''">
+                    dic_leaf = #{item.dicLeaf,jdbcType=INTEGER},
                 </if>
             </set>
             WHERE dic_id =#{item.dicId,jdbcType=INTEGER}
@@ -87,6 +94,6 @@
     </update>
 
     <delete id="delDictonary" parameterType="com.ex.store.core.pojo.ExSysDictionary">
-        delete ex_sys_dictionary where dic_parentid = #{dicParentid,jdbcType=INTEGER}
+        delete from ex_sys_dictionary where dic_parentid = #{dicId,jdbcType=INTEGER}
     </delete>
 </mapper>

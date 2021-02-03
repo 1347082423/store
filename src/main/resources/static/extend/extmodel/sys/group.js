@@ -154,7 +154,7 @@ layui.define(["form", "table", "jqutil", "treeTable"], function (exports) {
 
     treeTable.on('tree(add)',function(obj){
         var data = obj.item;
-        data = {pid:data.id}
+        data.pid = data.id
         admin.popup({
             title: '添加组信息'
             , area: ['735px', '650px']

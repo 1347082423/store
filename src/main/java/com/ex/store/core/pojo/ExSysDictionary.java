@@ -16,6 +16,8 @@ public class ExSysDictionary {
   private String dicSort;
   private String dicDesc;
   private Long dicForbid;
+  private Long dicLeaf;
+
 
 
   public Long getDicId() {
@@ -104,5 +106,13 @@ public class ExSysDictionary {
 
   public void setDicForbid(Long dicForbid) {
     this.dicForbid = dicForbid;
+  }
+
+  public Long getDicLeaf() {
+    return dicLeaf;
+  }
+
+  public void setDicLeaf(Long dicLeaf) {
+    this.dicLeaf = dicLeaf;
   }
 }

@@ -70,6 +70,10 @@
                 <button class="layui-btn layuiadmin-btn-list" data-type="batchdel">删除</button>
                 <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
             </div>
+            <script type="text/html" template lay-url="/dictionary/getValueByKeys" lay-type="post" lay-data="{keys:'isForbid',{{d.isForbid}} }">
+                <!-- 动态模板碎片 -->
+            </script>
+
             <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
             <script type="text/html" id="category">
                 {{# if(d.category=='1'){ }}
@@ -80,15 +84,19 @@
                 未定义
                 {{# } }}
             </script>
-            <script type="text/html" id="isForbid">
-                {{# if(d.isForbid=='1'){ }}
-                未禁用
-                {{# }else if (d.isForbid=='2'){ }}
-                禁用
-                {{# }else{ }}
-                未定义
-                {{# } }}
+            <script type="text/html" template id="isForbid" lay-url="/dictionary/getValueByKeys" lay-type="post" lay-data="{keys:'isForbid',{{d.isForbid}} }">
+                {{d.dicValue}}
+                <!-- 动态模板碎片 -->
             </script>
+            <!--<script type="text/html" id="isForbid">-->
+                <!--{{# if(d.isForbid=='1'){ }}-->
+                <!--未禁用-->
+                <!--{{# }else if (d.isForbid=='2'){ }}-->
+                <!--禁用-->
+                <!--{{# }else{ }}-->
+                <!--未定义-->
+                <!--{{# } }}-->
+            <!--</script>-->
             <script type="text/html" id="type">
                 {{# if(d.type=='1'){ }}
                 内部打开

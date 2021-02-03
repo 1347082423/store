@@ -53,7 +53,19 @@ layui.define(['form', 'jquery'], function (exports) {
             success: this.success,
             error: this.error
         });
-    }
+    };
+
+    JQUtil.prototype.loadByJSON = function (key) {
+        $.ajax({
+            type: this.type,
+            url: this.url,
+            dataType: "JSON",
+            data: {key:JSON.stringify(this.data)},
+            contentType:"application/json",
+            success: this.success,
+            error: this.error
+        });
+    };
 
     JQUtil.prototype.genID = function(length){
         return Number(Math.random().toString().substr(3,length) + Date.now()).toString(36);

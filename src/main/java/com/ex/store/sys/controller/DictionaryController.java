@@ -1,5 +1,6 @@
 package com.ex.store.sys.controller;
 
+import com.ex.store.core.cache.DictionaryCache;
 import com.ex.store.core.dto.DictionaryDto;
 import com.ex.store.core.exception.BusinessException;
 import com.ex.store.core.pojo.ExSysDictionary;
@@ -51,10 +52,10 @@ public class DictionaryController {
      * @return
      */
     @PostMapping("insertDictionary")
-    public AjaxResponse insertGroup(DictionaryDto exSysGroup){
+    public AjaxResponse insertGroup(@RequestBody ArrayList<DictionaryDto> exSysDictionaries){
         String msg = "";
         try {
-            msg = sysService.insertDictionary(exSysGroup);
+            msg = sysService.insertDictionary(exSysDictionaries.get(0));
         }catch (BusinessException e){
             msg = e.getMessage();
         }
@@ -65,5 +66,12 @@ public class DictionaryController {
     public AjaxResponse getChilds(DictionaryDto dictionaryDto){
         List<DictionaryDto> list = sysService.getChilds(dictionaryDto);
         return AjaxResponse.success(list);
+    }
+
+    @RequestMapping("getValueByKeys")
+    public AjaxResponse getValueByKeys(String keys){
+        String[] split = keys.split(",");
+        DictionaryDto valueByKeys = DictionaryCache.getValueByKeys(split);
+        return AjaxResponse.success(valueByKeys);
     }
 }

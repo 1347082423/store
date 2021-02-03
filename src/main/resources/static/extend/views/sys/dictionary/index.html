@@ -13,18 +13,18 @@
         <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-list">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">组/部门名称</label>
+                    <label class="layui-form-label">菜单名称</label>
                     <div class="layui-input-inline">
                         <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">类型</label>
+                    <label class="layui-form-label">字典类别</label>
                     <div class="layui-input-inline">
                         <select name="type">
                             <option value="0">请选择</option>
-                            <option value="1">部门</option>
-                            <option value="2">职位</option>
+                            <option value="1">系统字典</option>
+                            <option value="2">业务字典</option>
                         </select>
                     </div>
                 </div>
@@ -61,16 +61,29 @@
                 未定义
                 {{# } }}
             </script>
+            <script type="text/html" id="dicLeaf">
+                {{# if(d.dicLeaf=='1'){ }}
+                非
+                {{# }else if (d.dicLeaf=='2'){ }}
+                是
+                {{# }else{ }}
+                未定义
+                {{# } }}
+            </script>
             <script type="text/html" id="table-content-list">
+                {{# if(d.dicLeaf == '1'){ }}
                 <a class="layui-btn layui-btn-checked layui-btn-xs" lay-filter="add"><i
                         class="layui-icon layui-icon-edit"></i>添加
                 </a>
+                {{# }else{ }}
+                {{# } }}
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-filter="edit"><i
                         class="layui-icon layui-icon-edit"></i>编辑
                 </a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-filter="del"><i
                         class="layui-icon layui-icon-delete"></i>删除
                 </a>
+
             </script>
         </div>
     </div>

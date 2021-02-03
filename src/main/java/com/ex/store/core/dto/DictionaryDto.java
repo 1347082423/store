@@ -2,6 +2,7 @@ package com.ex.store.core.dto;
 
 import com.ex.store.core.pojo.ExSysDictionary;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  * @Date 2021-1-29 11:44
  * @Desc
  **/
-public class DictionaryDto extends ExSysDictionary {
+public class DictionaryDto extends ExSysDictionary implements Serializable {
 
     private String pName;
 
