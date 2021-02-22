@@ -41,5 +41,17 @@ public class CollectionUtils {
         return collection != null && collection.size() > 0;
     }
 
+    public static boolean isNotNull(Map collection){
+        return collection != null && !collection.isEmpty();
+    }
+
+    public static boolean isNull(Map collection){
+        return !isNotNull(collection);
+    }
+
+    public static Map deepClone(Map collection){
+//        Map targetMap = (HashMap)collection.clone();
+        return null;
+    }
 
 }

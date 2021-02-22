@@ -4,9 +4,9 @@
         <div class="layui-inline">
             <label class="layui-form-label">字典key</label>
             <div class="layui-input-inline">
-                <script type="text/html" template lay-done="layui.data.sendParams(d.params)">
-                    <input type="text" name="dicKey" lay-verify="required" value="{{ d.params.dicKey || '' }}"
-                           placeholder="请输入" autocomplete="off" class="layui-input">
+                <script type="text/html" template>
+                    <input type="text" name="dicKey" placeholder="请输入内容" class="layui-input"
+                           value="{{ d.params.dicKey || '' }}">
                 </script>
             </div>
         </div>
@@ -76,17 +76,29 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">下级是叶子节点</label>
-        <div class="layui-input-inline">
-            <script type="text/html" template>
-                <select name="dicLeaf">
-                    <option value="0">请选择</option>
-                    <option value="1" {{ d.params.dicLeaf== 1 ?
-                    'selected' : '' }}>否</option>
-                    <option value="2" {{ d.params.dicLeaf== 2 ?
-                    'selected' : '' }}>是</option>
-                </select>
-            </script>
+        <div class="layui-inline">
+            <label class="layui-form-label">下级是叶子节点</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template lay-url="/dictionary/getListByCode" lay-data="{code: 'yes and no'}"
+                        lay-done="layui.data.done(d);">
+                    <select name="dicLeaf">
+                        <option value="0">请选择</option>
+                        {{# layui.each(d.data, function(index, item){ }}
+                        <option value="{{item.dicKey}}" {{ d.params.dicLeaf== item.dicKey ?
+                        'selected' : item.dicIsDef == 1 ? 'selected' : '' }} >{{item.dicValue}}</option>
+                        {{# }); }}
+                    </select>
+                </script>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">字典code</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template lay-done="layui.data.sendParams(d.params)">
+                    <input type="text" name="dicCode" lay-verify="required" value="{{ d.params.dicCode || '' }}"
+                           placeholder="请输入" autocomplete="off" class="layui-input">
+                </script>
+            </div>
         </div>
     </div>
     <div class="layui-form-item">

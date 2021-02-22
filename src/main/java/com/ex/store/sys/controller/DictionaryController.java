@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author wex
@@ -70,8 +71,24 @@ public class DictionaryController {
 
     @RequestMapping("getValueByKeys")
     public AjaxResponse getValueByKeys(String keys){
-        String[] split = keys.split(",");
-        DictionaryDto valueByKeys = DictionaryCache.getValueByKeys(split);
+        DictionaryDto valueByKeys = DictionaryCache.getValueByKeys("","");
         return AjaxResponse.success(valueByKeys);
+    }
+    @RequestMapping("getListByCode")
+    public AjaxResponse getListByCode(String code){
+        List<DictionaryDto> listByCode = DictionaryCache.getListByCode(code);
+        return AjaxResponse.success(listByCode);
+    }
+
+    @RequestMapping("reloadDictionary")
+    public AjaxResponse reloadDictionary(){
+        sysService.reloadDictionary();
+        return AjaxResponse.success("字典重载成功");
+    }
+
+    @RequestMapping("getLaytpl")
+    public AjaxResponse getLaytpl(){
+        Map<String, List<DictionaryDto>> laytpl = sysService.getLaytpl();
+        return AjaxResponse.success(laytpl);
     }
 }

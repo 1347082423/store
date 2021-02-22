@@ -48,15 +48,7 @@
                 <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
             </div>
             <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
-            <script type="text/html" id="isForbid">
-                {{# if(d.isForbid=='1'){ }}
-                未禁用
-                {{# }else if (d.isForbid=='2'){ }}
-                禁用
-                {{# }else{ }}
-                未定义
-                {{# } }}
-            </script>
+
             <script type="text/html" id="table-content-list">
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
                         class="layui-icon layui-icon-edit"></i>编辑
@@ -70,6 +62,6 @@
 </div>
 
 <script>
-    layui.use('sysuser', layui.factory('sysuser'))
+    layui.use(['scriptUtils'], layui.factory('scriptUtils')).use(['sysuser'], layui.factory('sysuser'))
 </script>
 

@@ -8,6 +8,7 @@ import com.ex.store.core.vo.PageParameter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author wex
@@ -58,4 +59,8 @@ public interface SysService {
     String insertDictionary(DictionaryDto exSysGroup);
 
     List<DictionaryDto> getChilds(DictionaryDto dictionaryDto);
+
+    void reloadDictionary();
+
+    Map<String, List<DictionaryDto>> getLaytpl();
 }

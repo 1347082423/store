@@ -39,6 +39,11 @@ public class PortalController {
         return "login";
     }
 
+    @GetMapping("/a")
+    public String a(HttpServletRequest request, HttpServletResponse response) {
+        return "a";
+    }
+
     @RequestMapping("/index2")
     public String index2() {
         return "index2";

@@ -17,8 +17,12 @@ public class ExSysDictionary {
   private String dicDesc;
   private Long dicForbid;
   private Long dicLeaf;
+  private String dicName;
+  private Long dicIsDef;
+  private String dicCode;
 
-
+  private Long dicIsLaytpl;
+  private String dicLaytplId;
 
   public Long getDicId() {
     return dicId;
@@ -114,5 +118,45 @@ public class ExSysDictionary {
 
   public void setDicLeaf(Long dicLeaf) {
     this.dicLeaf = dicLeaf;
+  }
+
+  public String getDicName() {
+    return dicName;
+  }
+
+  public void setDicName(String dicName) {
+    this.dicName = dicName;
+  }
+
+  public Long getDicIsDef() {
+    return dicIsDef;
+  }
+
+  public void setDicIsDef(Long dicIsDef) {
+    this.dicIsDef = dicIsDef;
+  }
+
+  public String getDicCode() {
+    return dicCode;
+  }
+
+  public void setDicCode(String dicCode) {
+    this.dicCode = dicCode;
+  }
+
+  public Long getDicIsLaytpl() {
+    return dicIsLaytpl;
+  }
+
+  public void setDicIsLaytpl(Long dicIsLaytpl) {
+    this.dicIsLaytpl = dicIsLaytpl;
+  }
+
+  public String getDicLaytplId() {
+    return dicLaytplId;
+  }
+
+  public void setDicLaytplId(String dicLaytplId) {
+    this.dicLaytplId = dicLaytplId;
   }
 }

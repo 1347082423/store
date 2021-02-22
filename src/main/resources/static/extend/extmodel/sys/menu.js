@@ -25,11 +25,11 @@
             , {field: 'id', title: 'ID', width: 80, sort: true}
             , {field: 'title', title: '菜单名字', width: 200, sort: true}
             , {field: 'name', title: '菜单name', width: 200}
-            , {field: 'category', title: '类别', width: 100, sort: true, templet: '#category'}
+            , {field: 'category', title: '类别', width: 100, sort: true, templet: '#resourceCategory'}
             , {field: 'url', title: '跳转地址', width: 200}
             , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
             , {field: 'model', title: '所属model', width: 120, sort: true}
-            , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#type'}
+            , {field: 'type', title: '打开类型', width: 120, sort: true, templet: '#openType'}
             , {field: 'sort', title: '排序', width: 100}
             , {field: 'icon', title: '图标', width: 160}
             , {field: 'pid', title: 'pid',hide:true, width: 100}

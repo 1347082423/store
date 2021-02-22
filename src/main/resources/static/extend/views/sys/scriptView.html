@@ -1,0 +1,86 @@
+<script type="text/html" id="dicForbid">
+    {{# if(d.dicForbid=='1'){ }}
+    未禁用
+    {{# }else if (d.dicForbid=='2'){ }}
+    禁用
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+<script type="text/html" id="dicLeaf">
+    {{# if(d.dicLeaf=='1'){ }}
+    否
+    {{# }else if (d.dicLeaf=='2'){ }}
+    是
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+
+<script type="text/html" id="category">
+    {{# if(d.category=='1'){ }}
+    权限限制
+    {{# }else if (d.category=='2'){ }}
+    非权限限制
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+<script type="text/html" id="type">
+    {{# if(d.type=='1'){ }}
+    查询
+    {{# }else if (d.type=='2'){ }}
+    添加
+    {{# }else if (d.type=='3'){ }}
+    更新
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+
+
+<script type="text/html" id="menuType">
+    {{# if(d.type=='1'){ }}
+    菜单角色
+    {{# }else if (d.type=='2'){ }}
+    功能类角色
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+
+<script type="text/html" id="openType">
+    {{# if(d.type=='1'){ }}
+    内部打开
+    {{# }else if (d.type=='2'){ }}
+    ifream
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+
+<script type="text/html" id="resourceCategory">
+    {{# if(d.category=='1'){ }}
+    系统资源
+    {{# }else if (d.category=='2'){ }}
+    非系统资源
+    {{# }else{ }}
+    未定义
+    {{# } }}
+</script>
+
+<script type="text/html" id="minuser">
+    {{# if(d.minuser == null){ }}
+    0人
+    {{# }else{ }}
+    {{d.minuser }}人
+    {{# } }}
+</script>
+<script type="text/html" id="maxuser">
+    {{# if(d.maxuser == null){ }}
+    0人
+    {{# }else{ }}
+    {{d.maxuser }}人
+    {{# } }}
+</script>
+

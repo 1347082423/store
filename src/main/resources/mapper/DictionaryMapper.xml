@@ -4,7 +4,8 @@
 
     <select id="findDictionaryByCondition" resultType="com.ex.store.core.dto.DictionaryDto" parameterType="com.ex.store.core.dto.DictionaryDto">
         select `dic_id` as dicId, `dic_key` dicKey, `dic_value` dicValue, `dic_parentid` dicParentid, `dic_create_time` dicCreateTime, `dic_update_time` dicUpdateTime, `dic_category` dicCategory,
-        `dic_is_stair` dicIsStair, `dic_sort` dicSort, `dic_desc` dicDesc, `dic_forbid` dicForbid,`dic_leaf` dicLeaf from `ex_sys_dictionary`
+        `dic_is_stair` dicIsStair, `dic_sort` dicSort, `dic_desc` dicDesc, `dic_forbid` dicForbid,`dic_leaf` dicLeaf ,`dic_name` dicName,`dic_is_def` dicIsDef,`dic_code` dicCode, `dic_is_laytpl` dicIsLaytpl ,
+        `dic_laytplId` dicLaytplId from `ex_sys_dictionary`
         <where>
             1=1
             <if test="dicId != null and dicId != ''">
@@ -38,16 +39,32 @@
             <if test="dicLeaf != null and dicLeaf != ''">
                 and dic_leaf = #{dicLeaf,jdbcType=INTEGER}
             </if>
+            <if test="dicName != null and dicName != ''">
+                and dic_name = #{dicName,jdbcType=VARCHAR}
+            </if>
+            <if test="dicIsDef != null and dicIsDef != ''">
+                and dic_is_def = #{dicIsDef,jdbcType=INTEGER}
+            </if>
+            <if test="dicCode != null and dicCode != ''">
+                and dic_code = #{dicCode,jdbcType=VARCHAR}
+            </if>
+            <if test="dicLaytplId != null and dicLaytplId != ''">
+                and dic_laytplId = #{dicLaytplId,jdbcType=INTEGER}
+            </if>
+            <if test="dicIsLaytpl != null and dicIsLaytpl != ''">
+                and dic_is_laytpl = #{dicIsLaytpl,jdbcType=VARCHAR}
+            </if>
         </where>
         order by dic_sort asc
     </select>
 
     <insert id="insertDictonary" parameterType="java.util.List" keyProperty="dicId" useGeneratedKeys="true">
         INSERT INTO `ex_sys_dictionary`(`dic_key`, `dic_value`, `dic_parentid`, `dic_create_time`,
-        `dic_update_time`, `dic_category`, `dic_is_stair`, `dic_sort`, `dic_desc`, `dic_forbid`,`dic_leaf`) VALUES
+        `dic_update_time`, `dic_category`, `dic_is_stair`, `dic_sort`, `dic_desc`, `dic_forbid`,`dic_leaf`,`dic_name`,`dic_is_def`,`dic_code`,`dic_laytplId`,`dicIsLaytpl`) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.dicKey,jdbcType=VARCHAR},#{item.dicValue,jdbcType=VARCHAR},#{item.dicParentid,jdbcType=INTEGER},#{item.dicCreateTime,jdbcType=TIMESTAMP},#{item.dicUpdateTime,jdbcType=TIMESTAMP},#{item.dicCategory,jdbcType=VARCHAR},
-            #{item.dicIsStair,jdbcType=VARCHAR},#{item.dicSort,jdbcType=VARCHAR},#{item.dicDesc,jdbcType=VARCHAR},#{item.dicForbid,jdbcType=INTEGER},#{item.dicLeaf,jdbcType=INTEGER})
+            #{item.dicIsStair,jdbcType=VARCHAR},#{item.dicSort,jdbcType=VARCHAR},#{item.dicDesc,jdbcType=VARCHAR},#{item.dicForbid,jdbcType=INTEGER},#{item.dicLeaf,jdbcType=INTEGER},#{item.dicName,jdbcType=VARCHAR}
+            ,#{item.dicIsDef,jdbcType=INTEGER},#{item.dicCode,jdbcType=VARCHAR},#{item.dicLaytplId,jdbcType=INTEGER},#{item.dic_is_laytpl,jdbcType=VARCHAR})
         </foreach>
     </insert>
 
@@ -87,6 +104,21 @@
                 </if>
                 <if test="item.dicForbid != null and item.dicForbid != ''">
                     dic_leaf = #{item.dicLeaf,jdbcType=INTEGER},
+                </if>
+                <if test="item.dicName != null and item.dicName != ''">
+                    dic_name = #{item.dicName,jdbcType=VARCHAR},
+                </if>
+                <if test="item.dicIsDef != null and item.dicIsDef != ''">
+                    dic_is_def = #{item.dicIsDef,jdbcType=INTEGER},
+                </if>
+                <if test="item.dicCode != null and item.dicCode != ''">
+                    dic_code = #{item.dicCode,jdbcType=VARCHAR},
+                </if>
+                <if test="item.dicLaytplId != null and item.dicLaytplId != ''">
+                    dic_laytplId = #{item.dicLaytplId,jdbcType=INTEGER},
+                </if>
+                <if test="item.dicIsLaytpl != null and item.dicIsLaytpl != ''">
+                    dic_is_laytpl = #{item.dicIsLaytpl,jdbcType=VARCHAR},
                 </if>
             </set>
             WHERE dic_id =#{item.dicId,jdbcType=INTEGER}

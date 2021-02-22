@@ -14,7 +14,7 @@ layui.define(["form", "table", "jqutil"], function (exports) {
             , {field: 'name', title: '角色名称', width: 200, sort: true}
             , {field: 'rolename', title: '英文名称', width: 200}
             , {field: 'isForbid', title: '禁用', width: 100, templet: '#isForbid'}
-            , {field: 'type', title: '角色类型', width: 120, sort: true, templet: '#type'}
+            , {field: 'type', title: '角色类型', width: 120, sort: true, templet: '#menuType'}
             , {field: 'roles', title: '资源列表', width: 200}
             , {field: 'ids', title: '资源列表', width: 200, hide: true}
             , {field: 'desc', title: '描述', width: 200}

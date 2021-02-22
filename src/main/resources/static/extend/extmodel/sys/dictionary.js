@@ -1,9 +1,14 @@
 //dictionary
 layui.define(["form", "table", "jqutil", "treeTable","basicUtil"], function (exports) {
-
     var treeTable = layui.treeTable, form = layui.form, jqutil = layui.jqutil, $ = layui.$, admin = layui.admin,
         view = layui.view,table = layui.table,util = layui.basicUtil;
     // 直接下载后url: './data/table-tree.json',这个配置可能看不到数据，改为data:[],获取自己的实际链接返回json数组
+    layui.data.done = function(d){
+        layui.use(['form'], function(){
+            var form = layui.form;
+            form.render(null, 'layuiadmin-app-form-list'); //渲染该模板下的动态表单
+        });
+    };
     var re = treeTable.render({
         elem: '#tree-table',
         url: '/dictionary/index',
@@ -18,6 +23,7 @@ layui.define(["form", "table", "jqutil", "treeTable","basicUtil"], function (exp
         },
         cols: [{key: 'dicValue', title: '名称',},
             {key: 'dicKey', title: '字典key', align: 'center'},
+            {key: 'dicCode', title: '字典code', align: 'center'},
             {title: '类别', align: 'center', template: function (item) {
                     var value = "未定义";
                     if (item.dicCategory == 1) {
@@ -29,6 +35,7 @@ layui.define(["form", "table", "jqutil", "treeTable","basicUtil"], function (exp
                 }
             },
             {title: '序号', key: 'dicSort',},
+            {title: '默认值', key: 'dicIsDef',},
             {title: '子节点', align: 'center', template: 'dicLeaf', key: 'dicLeaf'},
             {title: '禁用', align: 'center', template: 'dicForbid', key: 'dicForbid'},
             {title: '操作', align: 'left', width: '200px', template: "table-content-list"}
@@ -101,6 +108,7 @@ layui.define(["form", "table", "jqutil", "treeTable","basicUtil"], function (exp
                             util.andItemByList(oldData,"dicIsStair",parseInt(field.dicIsStair) + 1);
                             util.andItemByList(oldData,"dicDesc",field.dicDesc);
                             util.andItemByList(oldData,"dicLeaf",field.dicLeaf);
+                            util.andItemByList(oldData,"dicCode",field.dicCode);
                             //提交 Ajax 成功后，关闭当前弹层并重载表格
                             //400请求参数出错
                             if (field.dicForbid == "on") {
@@ -130,6 +138,18 @@ layui.define(["form", "table", "jqutil", "treeTable","basicUtil"], function (exp
                     });
                 }
             });
+        },
+        load:function (othis) {
+            jqutil.render({
+                url:"/dictionary/reloadDictionary",
+                type:"POST",
+                success: function (d) {
+                    if (d.ok) {
+                        layer.msg(d.msg);
+                    }
+                }
+            });
+            jqutil.load()
         }
     };
 
@@ -161,6 +181,7 @@ layui.define(["form", "table", "jqutil", "treeTable","basicUtil"], function (exp
                         util.andItemByList(oldData,"dicDesc",field.dicDesc);
                         util.andItemByList(oldData,"dicLeaf",field.dicLeaf);
                         util.andItemByList(oldData,"dicForbid",field.dicForbid);
+                        util.andItemByList(oldData,"dicCode",field.dicCode);
                         field.dicLeaf = "1";
                         field.childs = oldData;
                         var data1 = [];
@@ -211,6 +232,7 @@ layui.define(["form", "table", "jqutil", "treeTable","basicUtil"], function (exp
                             util.andItemByList(oldData,"dicDesc",field.dicDesc);
                             util.andItemByList(oldData,"dicLeaf",field.dicLeaf);
                             util.andItemByList(oldData,"dicForbid",field.dicForbid);
+                            util.andItemByList(oldData,"dicCode",field.dicCode);
                             field.dicLeaf = "1";
                             field.childs = oldData;
                         }

@@ -1,5 +1,6 @@
 package com.ex.store.sys.service.impl;
 
+import com.ex.store.core.cache.DictionaryCache;
 import com.ex.store.core.dto.*;
 import com.ex.store.core.exception.BusinessException;
 import com.ex.store.core.pojo.*;
@@ -17,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -439,5 +437,37 @@ public class SysServiceImpl implements SysService {
     public List<DictionaryDto> getChilds(DictionaryDto dictionaryDto) {
         List<DictionaryDto> dictionaryByCondition = dictionaryMapper.findDictionaryByCondition(dictionaryDto);
         return dictionaryByCondition;
+    }
+
+    @Override
+    public void reloadDictionary() {
+        DictionaryDto dictionaryDto = new DictionaryDto();
+        dictionaryDto.setDicForbid(1L);
+        List<DictionaryDto> dictionaryByCondition = dictionaryMapper.findDictionaryByCondition(dictionaryDto);
+        DictionaryCache.initCache(dictionaryByCondition);
+    }
+
+    /**
+     * 获取
+     * @return
+     */
+    @Override
+    public Map<String, List<DictionaryDto>> getLaytpl() {
+        Map<String, List<DictionaryDto>> allDictionary = DictionaryCache.getAllDictionary();
+        Map<String, List<DictionaryDto>> dictionary = new HashMap<>();
+        for (String s : allDictionary.keySet()) {
+            String key = "";
+            List<DictionaryDto> valuList = allDictionary.get(s);
+            DictionaryDto dto = valuList.stream().filter(dictionaryDto -> StringUtils.isNull(dictionaryDto.getDicKey())).findAny().orElse(null);
+            if (dto == null){
+                continue;
+            }
+            if ((dto.getDicIsLaytpl() == null ? 0L : dto.getDicIsLaytpl()) == 1L){
+                key = StringUtils.isNull(dto.getDicLaytplId()) ? dto.getDicCode() : dto.getDicLaytplId();
+                List<DictionaryDto> collect = valuList.stream().filter(dictionaryDto -> !StringUtils.isNull(dictionaryDto.getDicKey())).collect(Collectors.toList());
+                dictionary.put(key,collect);
+            }
+        }
+        return dictionary;
     }
 }

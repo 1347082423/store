@@ -113,33 +113,6 @@
         </div>
     </div>
 </div>
-<script type="text/html" id="category">
-    {{# if(d.category=='1'){ }}
-    系统资源
-    {{# }else if (d.category=='2'){ }}
-    非系统资源
-    {{# }else{ }}
-    未定义
-    {{# } }}
-</script>
-<script type="text/html" id="isForbid">
-    {{# if(d.isForbid=='1'){ }}
-    未禁用
-    {{# }else if (d.isForbid=='2'){ }}
-    禁用
-    {{# }else{ }}
-    未定义
-    {{# } }}
-</script>
-<script type="text/html" id="typeField">
-    {{# if(d.type=='1'){ }}
-    内部打开
-    {{# }else if (d.type=='2'){ }}
-    ifream
-    {{# }else{ }}
-    未定义
-    {{# } }}
-</script>
 <script>
     layui.use('addSysUser', layui.factory('addSysUser'))
 </script>
