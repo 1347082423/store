@@ -4,10 +4,8 @@ layui.define(["form", "table", "jqutil", "treeTable","basicUtil"], function (exp
         view = layui.view,table = layui.table,util = layui.basicUtil;
     // 直接下载后url: './data/table-tree.json',这个配置可能看不到数据，改为data:[],获取自己的实际链接返回json数组
     layui.data.done = function(d){
-        layui.use(['form'], function(){
-            var form = layui.form;
-            form.render(null, 'layuiadmin-app-form-list'); //渲染该模板下的动态表单
-        });
+        var form = layui.form;
+        form.render(null, 'layuiadmin-app-form-list'); //渲染该模板下的动态表单
     };
     var re = treeTable.render({
         elem: '#tree-table',
@@ -109,6 +107,9 @@ layui.define(["form", "table", "jqutil", "treeTable","basicUtil"], function (exp
                             util.andItemByList(oldData,"dicDesc",field.dicDesc);
                             util.andItemByList(oldData,"dicLeaf",field.dicLeaf);
                             util.andItemByList(oldData,"dicCode",field.dicCode);
+
+                            util.andItemByList(oldData,"dicLaytplId",field.dicLaytplId);
+                            util.andItemByList(oldData,"dicIsLaytpl",field.dicIsLaytpl);
                             //提交 Ajax 成功后，关闭当前弹层并重载表格
                             //400请求参数出错
                             if (field.dicForbid == "on") {

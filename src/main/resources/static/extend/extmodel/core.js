@@ -8,6 +8,7 @@ layui.define(['form', 'jquery'], function (exports) {
         var layer = layui.layer, admin = layui.admin;
         //请求地址
         this.url = options.url;
+        this.syn = options.syn === undefined ? true : options.syn;
         // 请求参数
         this.data = options.params;
         // 请求方式
@@ -37,6 +38,7 @@ layui.define(['form', 'jquery'], function (exports) {
         $.ajax({
             type: this.type,
             url: this.url,
+            async:this.syn,
             dataType: "JSON",
             data: this.data,
             success: this.success,

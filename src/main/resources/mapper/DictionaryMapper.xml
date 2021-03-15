@@ -60,11 +60,11 @@
 
     <insert id="insertDictonary" parameterType="java.util.List" keyProperty="dicId" useGeneratedKeys="true">
         INSERT INTO `ex_sys_dictionary`(`dic_key`, `dic_value`, `dic_parentid`, `dic_create_time`,
-        `dic_update_time`, `dic_category`, `dic_is_stair`, `dic_sort`, `dic_desc`, `dic_forbid`,`dic_leaf`,`dic_name`,`dic_is_def`,`dic_code`,`dic_laytplId`,`dicIsLaytpl`) VALUES
+        `dic_update_time`, `dic_category`, `dic_is_stair`, `dic_sort`, `dic_desc`, `dic_forbid`,`dic_leaf`,`dic_name`,`dic_is_def`,`dic_code`,`dic_laytplId`,`dic_is_laytpl`) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.dicKey,jdbcType=VARCHAR},#{item.dicValue,jdbcType=VARCHAR},#{item.dicParentid,jdbcType=INTEGER},#{item.dicCreateTime,jdbcType=TIMESTAMP},#{item.dicUpdateTime,jdbcType=TIMESTAMP},#{item.dicCategory,jdbcType=VARCHAR},
             #{item.dicIsStair,jdbcType=VARCHAR},#{item.dicSort,jdbcType=VARCHAR},#{item.dicDesc,jdbcType=VARCHAR},#{item.dicForbid,jdbcType=INTEGER},#{item.dicLeaf,jdbcType=INTEGER},#{item.dicName,jdbcType=VARCHAR}
-            ,#{item.dicIsDef,jdbcType=INTEGER},#{item.dicCode,jdbcType=VARCHAR},#{item.dicLaytplId,jdbcType=INTEGER},#{item.dic_is_laytpl,jdbcType=VARCHAR})
+            ,#{item.dicIsDef,jdbcType=INTEGER},#{item.dicCode,jdbcType=VARCHAR},#{item.dicLaytplId,jdbcType=INTEGER},#{item.dicIsLaytpl,jdbcType=VARCHAR})
         </foreach>
     </insert>
 

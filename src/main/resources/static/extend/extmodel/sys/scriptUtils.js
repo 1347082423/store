@@ -3,6 +3,7 @@ layui.define(["jqutil"], function (exports) {
     jqutil.render({
         url:"/dictionary/getLaytpl",
         params: "",
+        syn:false,
         type: "POST",
         success:function (d) {
             if (d.ok) {
@@ -28,6 +29,6 @@ layui.define(["jqutil"], function (exports) {
         }
     });
     jqutil.load();
-    $(".layadmin-header").load("/extend/views/sys/scriptView.html");
+    $(".layui-breadcrumb").load("/extend/views/sys/scriptView.html");
     exports('scriptUtils', {});
 })

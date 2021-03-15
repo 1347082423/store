@@ -40,7 +40,7 @@ public interface UserMapper {
             " where r_r.resourceid = resource.id and r_r.roleid = #{id}")
     List<ExSysResource> loadResourceByRoleId(@Param("id") Long id);
 
-    @Select("select resource.id,resource.`name`,resource.category,resource.url,resource.`desc`,resource.`pid`,resource.`title` from ex_sys_menu resource,ex_sys_role_resource r_r" +
+    @Select("select resource.id,resource.`name`,resource.category,resource.url,resource.`desc`,resource.`pid`,resource.`title`,`icon` icon  from ex_sys_menu resource,ex_sys_role_resource r_r" +
             " where r_r.resourceid = resource.id and r_r.roleid = #{id} order by sort asc")
     List<ExSysMenu> loadMenuByRoleId(@Param("id") Long id);
 

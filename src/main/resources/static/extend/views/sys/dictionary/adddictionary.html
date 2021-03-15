@@ -102,6 +102,32 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">开启laytpl配置</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template lay-url="/dictionary/getListByCode" lay-data="{code: 'yes and no'}"
+                        lay-done="layui.data.done(d);">
+                    <select name="dicIsLaytpl">
+                        <option value="0">请选择</option>
+                        {{# layui.each(d.data, function(index, item){ }}
+                        <option value="{{item.dicKey}}" {{ d.params.dicIsLaytpl == item.dicKey ?
+                        'selected' : item.dicIsDef == 1 ? 'selected' : '' }} >{{item.dicValue}}</option>
+                        {{# }); }}
+                    </select>
+                </script>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">laytplID</label>
+            <div class="layui-input-inline">
+                <script type="text/html" template lay-done="layui.data.sendParams(d.params)">
+                    <input type="text" name="dicLaytplId" lay-verify="required" value="{{ d.params.dicLaytplId || '' }}"
+                           placeholder="请输入" autocomplete="off" class="layui-input">
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">字典描述</label>
         <div class="layui-input-block">
             <script type="text/html" template>
